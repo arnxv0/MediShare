@@ -102,31 +102,51 @@ document.addEventListener('DOMContentLoaded', function() {
 // Navigation functions
 function showHome() {
     hideAllSections();
-    document.getElementById('home').classList.add('active');
+    const homeElement = document.getElementById('home');
+    if (homeElement) {
+        homeElement.classList.add('active');
+    }
     window.history.pushState({}, '', window.location.pathname);
 }
 
 function showPatientPortal() {
     hideAllSections();
-    document.getElementById('patient-portal').classList.add('active');
+    const portalElement = document.getElementById('patient-portal');
+    if (portalElement) {
+        portalElement.classList.add('active');
+    }
+
     if (currentPatient) {
-        document.getElementById('patient-setup').classList.add('hidden');
-        document.getElementById('patient-tabs').classList.remove('hidden');
-        document.getElementById('patient-name-display').textContent = `Welcome, ${currentPatient.name}`;
+        const setupElement = document.getElementById('patient-setup');
+        const tabsElement = document.getElementById('patient-tabs');
+        const nameDisplay = document.getElementById('patient-name-display');
+
+        if (setupElement) setupElement.classList.add('hidden');
+        if (tabsElement) tabsElement.classList.remove('hidden');
+        if (nameDisplay) nameDisplay.textContent = `Welcome, ${currentPatient.name}`;
     } else {
-        document.getElementById('patient-setup').classList.remove('hidden');
-        document.getElementById('patient-tabs').classList.add('hidden');
+        const setupElement = document.getElementById('patient-setup');
+        const tabsElement = document.getElementById('patient-tabs');
+
+        if (setupElement) setupElement.classList.remove('hidden');
+        if (tabsElement) tabsElement.classList.add('hidden');
     }
 }
 
 function showDoctorAccess() {
     hideAllSections();
-    document.getElementById('doctor-access').classList.add('active');
+    const doctorElement = document.getElementById('doctor-access');
+    if (doctorElement) {
+        doctorElement.classList.add('active');
+    }
 }
 
 function showApiStatus() {
     hideAllSections();
-    document.getElementById('api-status').classList.add('active');
+    const apiElement = document.getElementById('api-status');
+    if (apiElement) {
+        apiElement.classList.add('active');
+    }
 }
 
 function hideAllSections() {
@@ -206,19 +226,22 @@ function handleDrop(event) {
     handleFiles(files);
 }
 
-// Process files using Upload API (updated to use real API)
 function handleFiles(files) {
     if (files.length === 0) return;
 
     const uploadedFilesContainer = document.getElementById('uploaded-files');
     const apiCallStatus = document.getElementById('api-call-status');
 
-    // Show API call status
-    apiCallStatus.classList.remove('hidden');
+    // Show API call status only if element exists
+    if (apiCallStatus) {
+        apiCallStatus.classList.remove('hidden');
+    }
 
     Array.from(files).forEach((file, index) => {
         const fileItem = createFileItem(file);
-        uploadedFilesContainer.appendChild(fileItem);
+        if (uploadedFilesContainer) {
+            uploadedFilesContainer.appendChild(fileItem);
+        }
 
         // Call real API
         setTimeout(() => {
@@ -371,7 +394,7 @@ function addChatMessage(role, content) {
 }
 
 function showChatThinking(show) {
-    const thinkingElement = document.querySelector('.chat-thinking');
+    const thinkingElement = document.querySelector('.chat-thinking') || document.querySelector('.chat-api-status');
     if (thinkingElement) {
         thinkingElement.style.display = show ? 'block' : 'none';
     }
@@ -506,8 +529,6 @@ function copyShareUrl() {
 
 function generateShareToken() {
     console.log('Generating share token...');
-    console.log('Current patient:', currentPatient);
-    console.log('Medical timeline:', medicalTimeline);
 
     if (!currentPatient) {
         alert('Please set up your patient profile first');
@@ -517,7 +538,7 @@ function generateShareToken() {
     const token = generateId();
     const shareUrl = `${window.location.origin}${window.location.pathname}?token=${token}`;
 
-    // Create the data structure that matches what verifyDoctorAccess expects
+    // Create the data structure
     const shareData = {
         patientId: currentPatient.id,
         patientName: currentPatient.name,
@@ -525,17 +546,11 @@ function generateShareToken() {
         timeline: medicalTimeline || []
     };
 
-    console.log('Storing share data:', shareData);
-
-    // Store in localStorage with the correct key
+    // Store in localStorage
     const key = `doctor-token-${token}`;
     localStorage.setItem(key, JSON.stringify(shareData));
 
-    // Verify it was stored correctly
-    const stored = localStorage.getItem(key);
-    console.log('Verified stored data:', stored);
-
-    // Try to find the correct elements in the HTML and update them
+    // Try to find and update elements (with null checks)
     const tokenDisplay = document.getElementById('share-token-display') || document.getElementById('generated-link');
     const urlDisplay = document.getElementById('share-url-display') || document.getElementById('generated-link');
     const results = document.getElementById('share-results') || document.getElementById('share-link-result');
@@ -565,11 +580,8 @@ function generateShareToken() {
         results.classList.remove('hidden');
     }
 
-    console.log('Share token generated successfully:', token);
-    console.log('Share URL:', shareUrl);
-
-    // Also show an alert with the URL for easy testing
-    alert(`Share URL generated: ${shareUrl}`);
+    console.log('Share token generated:', token);
+    alert(`Share URL: ${shareUrl}`);
 }
 
 function verifyDoctorAccess(token) {
