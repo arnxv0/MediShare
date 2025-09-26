@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MediShare - AI-Powered Healthcare Data Platform</title>
+    <title>MediShare - Simplified 3-API Architecture</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -14,104 +14,29 @@
         <div class="container flex items-center justify-between">
             <div class="logo">
                 <h2>MediShare</h2>
-                <span class="logo-tagline">AI-Powered Healthcare Platform</span>
+                <span class="api-badge">3-API Architecture</span>
             </div>
             <nav class="nav">
                 <button class="btn btn--outline" onclick="showHome()">Home</button>
                 <button class="btn btn--secondary" onclick="showPatientPortal()">Patient Portal</button>
-                <button class="btn btn--outline" onclick="showApiConfig()">
-                    <i data-lucide="settings"></i>
-                    API Config
-                </button>
+                <button class="btn btn--outline" onclick="showApiStatus()">API Status</button>
             </nav>
         </div>
     </header>
-
-    <!-- API Configuration Modal -->
-    <div id="api-config-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>API Configuration</h3>
-                <button class="btn btn--outline btn--sm" onclick="closeApiConfig()">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="config-section">
-                    <h4><i data-lucide="brain"></i> Llama AI Configuration</h4>
-                    <div class="form-group">
-                        <label class="form-label">API Key</label>
-                        <input type="password" id="llama-api-key" class="form-control" placeholder="Enter your Llama API key">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Model</label>
-                        <select id="llama-model" class="form-control">
-                            <option value="llama-2-70b-chat">Llama 2 70B Chat</option>
-                            <option value="llama-2-13b-chat">Llama 2 13B Chat</option>
-                            <option value="llama-2-7b-chat">Llama 2 7B Chat</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="config-section">
-                    <h4><i data-lucide="database"></i> Snowflake Configuration</h4>
-                    <div class="form-group">
-                        <label class="form-label">Account URL</label>
-                        <input type="text" id="snowflake-account" class="form-control" placeholder="https://your-account.snowflakecomputing.com">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Username</label>
-                        <input type="text" id="snowflake-username" class="form-control" placeholder="Your Snowflake username">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="snowflake-password" class="form-control" placeholder="Your Snowflake password">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Database</label>
-                        <input type="text" id="snowflake-database" class="form-control" placeholder="MEDISHARE_DB">
-                    </div>
-                </div>
-
-                <div class="config-section">
-                    <h4><i data-lucide="users"></i> CrewAI Configuration</h4>
-                    <div class="form-group">
-                        <label class="form-label">API Key</label>
-                        <input type="password" id="crewai-api-key" class="form-control" placeholder="Enter your CrewAI API key">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Endpoint</label>
-                        <input type="text" id="crewai-endpoint" class="form-control" placeholder="https://api.crewai.com/v1">
-                    </div>
-                </div>
-
-                <div class="config-section">
-                    <h4><i data-lucide="image"></i> LandingAI Configuration</h4>
-                    <div class="form-group">
-                        <label class="form-label">API Key</label>
-                        <input type="password" id="landingai-api-key" class="form-control" placeholder="Enter your LandingAI API key">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button class="btn btn--primary btn--full-width" onclick="saveApiConfig()">
-                        <i data-lucide="save"></i>
-                        Save Configuration
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Home/Landing Page -->
     <section id="home" class="section active">
         <div class="hero">
             <div class="container">
                 <div class="hero__content">
-                    <h1 class="hero__title">AI-Powered Healthcare Data Sharing Platform</h1>
+                    <h1 class="hero__title">Simplified Medical Data Sharing</h1>
+                    <div class="architecture-badge">
+                        <span class="badge-3api">3-API Architecture</span>
+                        <span class="badge-simplified">Streamlined Integration</span>
+                    </div>
                     <p class="hero__description">
-                        MediShare leverages cutting-edge AI technologies including Llama AI, CrewAI agents, and Snowflake data warehouse 
-                        to provide secure, intelligent medical document processing and sharing between patients and healthcare providers.
+                        Experience the power of simplified healthcare data management with just 3 external APIs: 
+                        Upload, Chat, and Timeline integration for complete medical workflow automation.
                     </p>
                     <div class="hero__actions">
                         <button class="btn btn--primary btn--lg" onclick="showPatientPortal()">
@@ -123,58 +48,189 @@
                             I'm a Doctor
                         </button>
                     </div>
-                    
-                    <div class="tech-stack">
-                        <div class="tech-item">
-                            <i data-lucide="brain"></i>
-                            <span>Llama AI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Architecture Section -->
+        <div class="api-architecture">
+            <div class="container">
+                <h2 class="section__title">Simplified 3-API Integration</h2>
+                <div class="api-grid">
+                    <div class="api-card">
+                        <div class="api-icon upload-api">
+                            <i data-lucide="upload"></i>
                         </div>
-                        <div class="tech-item">
-                            <i data-lucide="users"></i>
-                            <span>CrewAI</span>
+                        <h3>Upload API</h3>
+                        <div class="api-endpoint">https://test.com/upload</div>
+                        <p>Document processing and medical timeline generation</p>
+                        <div class="api-status status--success">
+                            <i data-lucide="check-circle"></i>
+                            Connected
                         </div>
-                        <div class="tech-item">
-                            <i data-lucide="database"></i>
-                            <span>Snowflake</span>
+                    </div>
+                    <div class="api-card">
+                        <div class="api-icon chat-api">
+                            <i data-lucide="message-circle"></i>
                         </div>
-                        <div class="tech-item">
-                            <i data-lucide="image"></i>
-                            <span>LandingAI</span>
+                        <h3>Chat API</h3>
+                        <div class="api-endpoint">https://test.com/chat</div>
+                        <p>AI-powered medical chat responses and analysis</p>
+                        <div class="api-status status--success">
+                            <i data-lucide="check-circle"></i>
+                            Connected
+                        </div>
+                    </div>
+                    <div class="api-card">
+                        <div class="api-icon timeline-api">
+                            <i data-lucide="timeline"></i>
+                        </div>
+                        <h3>Timeline API</h3>
+                        <div class="api-endpoint">https://test.com/timeline</div>
+                        <p>Medical timeline retrieval and history management</p>
+                        <div class="api-status status--success">
+                            <i data-lucide="check-circle"></i>
+                            Connected
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Features Section -->
-        <div class="features">
+        <!-- How It Works Section -->
+        <div class="workflow-section">
             <div class="container">
-                <div class="architecture-flow">
-                    <h3>Data Processing Pipeline</h3>
-                    <div class="pipeline">
-                        <div class="pipeline-step">
-                            <i data-lucide="upload"></i>
-                            <span>Document Upload</span>
+                <h2 class="section__title">How Our 3-API System Works</h2>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Upload Documents</h4>
+                            <p>Upload API processes medical documents and generates timeline events</p>
+                            <div class="step-api">API: /upload</div>
                         </div>
-                        <div class="pipeline-arrow">→</div>
-                        <div class="pipeline-step">
-                            <i data-lucide="image"></i>
-                            <span>LandingAI OCR</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Timeline Generation</h4>
+                            <p>Timeline API retrieves and organizes medical history chronologically</p>
+                            <div class="step-api">API: /timeline</div>
                         </div>
-                        <div class="pipeline-arrow">→</div>
-                        <div class="pipeline-step">
-                            <i data-lucide="users"></i>
-                            <span>CrewAI Agents</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Share with Doctor</h4>
+                            <p>Secure token-based sharing enables doctor access to timeline data</p>
+                            <div class="step-api">Token-based</div>
                         </div>
-                        <div class="pipeline-arrow">→</div>
-                        <div class="pipeline-step">
-                            <i data-lucide="brain"></i>
-                            <span>Llama Analysis</span>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>AI Analysis</h4>
+                            <p>Chat API provides intelligent medical insights and analysis</p>
+                            <div class="step-api">API: /chat</div>
                         </div>
-                        <div class="pipeline-arrow">→</div>
-                        <div class="pipeline-step">
-                            <i data-lucide="database"></i>
-                            <span>Snowflake Storage</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Status Dashboard -->
+    <section id="api-status" class="section">
+        <div class="container">
+            <h1>API Integration Dashboard</h1>
+            <div class="api-dashboard">
+                <div class="dashboard-header">
+                    <div class="dashboard-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">Total APIs</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0ms</span>
+                            <span class="stat-label">Avg Response</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="api-details-grid">
+                    <div class="api-detail-card">
+                        <div class="api-detail-header">
+                            <h3>Upload API</h3>
+                            <span class="status-indicator status-online"></span>
+                        </div>
+                        <div class="api-detail-body">
+                            <div class="api-detail-row">
+                                <span>Endpoint:</span>
+                                <code>https://test.com/upload</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Method:</span>
+                                <code>POST</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Purpose:</span>
+                                <span>Document processing & timeline generation</span>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Response:</span>
+                                <span>Medical timeline events</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="api-detail-card">
+                        <div class="api-detail-header">
+                            <h3>Chat API</h3>
+                            <span class="status-indicator status-online"></span>
+                        </div>
+                        <div class="api-detail-body">
+                            <div class="api-detail-row">
+                                <span>Endpoint:</span>
+                                <code>https://test.com/chat</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Method:</span>
+                                <code>POST</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Purpose:</span>
+                                <span>AI medical analysis & responses</span>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Response:</span>
+                                <span>Medical insights with confidence scores</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="api-detail-card">
+                        <div class="api-detail-header">
+                            <h3>Timeline API</h3>
+                            <span class="status-indicator status-online"></span>
+                        </div>
+                        <div class="api-detail-body">
+                            <div class="api-detail-row">
+                                <span>Endpoint:</span>
+                                <code>https://test.com/timeline</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Method:</span>
+                                <code>GET</code>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Purpose:</span>
+                                <span>Medical timeline retrieval</span>
+                            </div>
+                            <div class="api-detail-row">
+                                <span>Response:</span>
+                                <span>Chronological medical events</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -187,28 +243,20 @@
         <div class="container">
             <div class="portal-header">
                 <h1>Patient Portal</h1>
-                <p id="patient-name-display" class="patient-info">Welcome to MediShare AI Platform</p>
+                <p id="patient-name-display" class="patient-info">Experience simplified medical data sharing</p>
             </div>
 
             <!-- Patient Profile Setup -->
             <div id="patient-setup" class="card setup-card">
                 <div class="card__body">
                     <h3>Create Your Profile</h3>
+                    <p class="setup-description">Join the simplified 3-API medical sharing platform</p>
                     <div class="form-group">
                         <label class="form-label">Your Name</label>
                         <input type="text" id="patient-name-input" class="form-control" placeholder="Enter your full name">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Date of Birth</label>
-                        <input type="date" id="patient-dob" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Medical Record Number (Optional)</label>
-                        <input type="text" id="patient-mrn" class="form-control" placeholder="Enter your MRN">
-                    </div>
                     <button class="btn btn--primary" onclick="setupPatient()">
-                        <i data-lucide="user-plus"></i>
-                        Create Profile & Continue
+                        Continue to Portal
                     </button>
                 </div>
             </div>
@@ -218,15 +266,15 @@
                 <div class="tab-buttons">
                     <button class="tab-button active" onclick="showTab('upload')">
                         <i data-lucide="upload"></i>
-                        Upload Documents
+                        Upload API
                     </button>
                     <button class="tab-button" onclick="showTab('timeline')">
                         <i data-lucide="timeline"></i>
-                        AI Timeline
+                        Timeline API
                     </button>
                     <button class="tab-button" onclick="showTab('share')">
                         <i data-lucide="share"></i>
-                        Secure Share
+                        Share Access
                     </button>
                 </div>
 
@@ -234,44 +282,31 @@
                 <div id="upload-tab" class="tab-content active">
                     <div class="card">
                         <div class="card__body">
-                            <h3>Upload Medical Documents</h3>
-                            <p class="upload-description">
-                                Our AI pipeline will process your documents using LandingAI for text extraction, 
-                                CrewAI agents for data organization, and Llama AI for medical analysis.
-                            </p>
+                            <div class="api-integration-header">
+                                <h3>Upload API Integration</h3>
+                                <div class="api-endpoint-badge">
+                                    <i data-lucide="globe"></i>
+                                    https://test.com/upload
+                                </div>
+                            </div>
                             <div class="upload-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event)" ondragleave="handleDragLeave(event)">
                                 <div class="upload-content">
                                     <i data-lucide="upload" class="upload-icon"></i>
-                                    <p class="upload-text">Drag and drop your files here or <button class="upload-button" onclick="document.getElementById('file-input').click()">browse</button></p>
-                                    <p class="upload-subtext">Supports PDF, images, and document files • Processed with AI</p>
+                                    <p class="upload-text">Upload documents to Upload API</p>
+                                    <button class="upload-button" onclick="document.getElementById('file-input').click()">
+                                        Select Files
+                                    </button>
+                                    <p class="upload-subtext">Files will be processed via external Upload API</p>
                                 </div>
                                 <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFiles(this.files)" class="hidden">
                             </div>
                             <div id="uploaded-files" class="uploaded-files"></div>
-                            <div id="processing-pipeline" class="processing-pipeline hidden">
-                                <h4>AI Processing Pipeline</h4>
-                                <div class="pipeline-status">
-                                    <div class="pipeline-step-status" id="step-landingai">
-                                        <i data-lucide="image"></i>
-                                        <span>LandingAI OCR</span>
-                                        <div class="step-indicator">
-                                            <div class="spinner"></div>
-                                        </div>
-                                    </div>
-                                    <div class="pipeline-step-status" id="step-crewai">
-                                        <i data-lucide="users"></i>
-                                        <span>CrewAI Processing</span>
-                                        <div class="step-indicator">⏳</div>
-                                    </div>
-                                    <div class="pipeline-step-status" id="step-llama">
-                                        <i data-lucide="brain"></i>
-                                        <span>Llama Analysis</span>
-                                        <div class="step-indicator">⏳</div>
-                                    </div>
-                                    <div class="pipeline-step-status" id="step-snowflake">
-                                        <i data-lucide="database"></i>
-                                        <span>Snowflake Storage</span>
-                                        <div class="step-indicator">⏳</div>
+                            <div id="api-call-status" class="api-call-status hidden">
+                                <div class="api-call-indicator">
+                                    <div class="spinner"></div>
+                                    <div class="api-call-details">
+                                        <p>Calling Upload API...</p>
+                                        <code>POST https://test.com/upload</code>
                                     </div>
                                 </div>
                             </div>
@@ -283,13 +318,21 @@
                 <div id="timeline-tab" class="tab-content">
                     <div class="card">
                         <div class="card__body">
-                            <div class="timeline-header-controls">
-                                <h3>Your AI-Generated Medical Timeline</h3>
+                            <div class="api-integration-header">
+                                <h3>Timeline API Integration</h3>
+                                <div class="api-endpoint-badge">
+                                    <i data-lucide="globe"></i>
+                                    https://test.com/timeline
+                                </div>
+                                <button class="btn btn--outline btn--sm" onclick="refreshTimeline()">
+                                    <i data-lucide="refresh-cw"></i>
+                                    Refresh from API
+                                </button>
                             </div>
                             <div id="timeline-container" class="timeline-container">
                                 <div class="timeline-empty">
                                     <i data-lucide="calendar"></i>
-                                    <p>Upload documents to generate your AI-powered medical timeline</p>
+                                    <p>Upload documents to generate timeline via APIs</p>
                                 </div>
                             </div>
                         </div>
@@ -300,25 +343,20 @@
                 <div id="share-tab" class="tab-content">
                     <div class="card">
                         <div class="card__body">
-                            <h3>Secure Healthcare Provider Sharing</h3>
+                            <h3>Generate Secure Access Token</h3>
+                            <p class="share-description">Create a token for doctors to access your timeline via our APIs</p>
                             <div class="share-options">
-                                <div class="form-group">
-                                    <label class="form-label">Healthcare Provider Email</label>
-                                    <input type="email" id="provider-email" class="form-control" placeholder="doctor@hospital.com">
-                                </div>
                                 <div class="form-group">
                                     <label class="form-label">Access Duration</label>
                                     <select id="access-duration" class="form-control">
                                         <option value="7">7 days</option>
                                         <option value="14">14 days</option>
                                         <option value="30">30 days</option>
-                                        <option value="90">90 days</option>
                                     </select>
                                 </div>
-                                </div>
-                                <button class="btn btn--primary btn--full-width" onclick="generateSecureShareLink()" id="generate-link-btn">
+                                <button class="btn btn--primary btn--full-width" onclick="generateShareLink()" id="generate-link-btn">
                                     <i data-lucide="link"></i>
-                                    Generate HIPAA-Compliant Link
+                                    Generate Secure Link
                                 </button>
                                 <div id="share-link-result" class="share-result hidden">
                                     <div class="link-container">
@@ -329,9 +367,9 @@
                                         </button>
                                     </div>
                                     <p class="share-instructions">
-                                        Secure link generated with Snowflake encryption. 
-                                        The link will expire in <span id="expiry-days">7</span> days.
-                                        All access is logged for HIPAA compliance.
+                                        Share this secure link with your healthcare provider. 
+                                        They will access your data through our API endpoints.
+                                        Link expires in <span id="expiry-days">7</span> days.
                                     </p>
                                 </div>
                             </div>
@@ -345,20 +383,18 @@
     <!-- Doctor Access Portal -->
     <section id="doctor-access" class="section">
         <div class="container">
-            <h1>Healthcare Provider Access</h1>
+            <h1>Doctor Access Portal</h1>
             <div class="card">
                 <div class="card__body">
                     <h3>Enter Patient Access Token</h3>
-                    <p class="access-description">
-                        Access patient data securely through our Snowflake-encrypted sharing system with Llama AI assistance.
-                    </p>
+                    <p class="access-description">Access patient data through our secure 3-API system</p>
                     <div class="form-group">
                         <label class="form-label">Access Token</label>
                         <input type="text" id="access-token-input" class="form-control" placeholder="Enter the secure access token from your patient">
                     </div>
                     <button class="btn btn--primary" onclick="verifyAccess()">
                         <i data-lucide="key"></i>
-                        Access Patient Data
+                        Access Patient Data via APIs
                     </button>
                     <div id="access-error" class="status status--error hidden">
                         Invalid or expired access token
@@ -374,8 +410,8 @@
             <div class="doctor-header">
                 <h1>Patient Medical Overview</h1>
                 <div class="patient-info-card">
-                    <p id="doctor-patient-name">Patient: John Doe</p>
-                    <span class="status status--success">Snowflake Verified</span>
+                    <p id="doctor-patient-name">Patient: Sarah Johnson</p>
+                    <span class="status status--success">API Access Verified</span>
                 </div>
             </div>
 
@@ -383,36 +419,36 @@
                 <div class="tab-buttons">
                     <button class="tab-button active" onclick="showDoctorTab('timeline')">
                         <i data-lucide="timeline"></i>
-                        AI Timeline
+                        Timeline API
                     </button>
                     <button class="tab-button" onclick="showDoctorTab('chat')">
                         <i data-lucide="message-circle"></i>
-                        Llama Assistant
-                    </button>
-                    <button class="tab-button" onclick="showDoctorTab('analytics')">
-                        <i data-lucide="bar-chart"></i>
-                        Analytics
+                        Chat API
                     </button>
                 </div>
 
                 <!-- Doctor Timeline Tab -->
                 <div id="doctor-timeline-tab" class="tab-content active">
+                    <div class="api-integration-header">
+                        <h3>Timeline API Data</h3>
+                        <div class="api-endpoint-badge">
+                            <i data-lucide="globe"></i>
+                            https://test.com/timeline
+                        </div>
+                        <button class="btn btn--outline btn--sm" onclick="refreshDoctorTimeline()">
+                            <i data-lucide="refresh-cw"></i>
+                            Fetch Latest
+                        </button>
+                    </div>
                     <div class="timeline-filters">
                         <div class="filter-group">
                             <label class="form-label">Filter by Type</label>
                             <select id="timeline-filter" class="form-control" onchange="filterTimeline()">
                                 <option value="all">All Events</option>
                                 <option value="lab_test">Lab Tests</option>
-                                <option value="imaging">Imaging</option>
                                 <option value="prescription">Prescriptions</option>
                                 <option value="document">Documents</option>
                             </select>
-                        </div>
-                        <div class="filter-group">
-                            <button class="btn btn--outline" onclick="exportToSnowflake()">
-                                <i data-lucide="database"></i>
-                                Export to Snowflake
-                            </button>
                         </div>
                     </div>
                     <div id="doctor-timeline-container" class="timeline-container"></div>
@@ -420,18 +456,18 @@
 
                 <!-- Doctor Chat Tab -->
                 <div id="doctor-chat-tab" class="tab-content">
-                    <div class="chat-container">
-                        <div class="chat-header">
-                            <h3>Llama AI Medical Assistant</h3>
-                            <div class="chat-status">
-                                <span class="status status--info">Llama AI Active</span>
-                                <span class="status status--success">Snowflake Connected</span>
-                            </div>
+                    <div class="api-integration-header">
+                        <h3>Chat API Integration</h3>
+                        <div class="api-endpoint-badge">
+                            <i data-lucide="globe"></i>
+                            https://test.com/chat
                         </div>
+                    </div>
+                    <div class="chat-container">
                         <div id="chat-messages" class="chat-messages">
                             <div class="chat-message chat-message--assistant">
                                 <div class="message-content">
-                                    <p>Hello! I'm your Llama AI medical assistant. I have access to this patient's complete medical timeline stored in Snowflake. I can help you analyze lab results, medications, medical history, and provide clinical insights. How can I assist you today?</p>
+                                    <p>Hello! I'm connected to the Chat API at https://test.com/chat. I can analyze this patient's medical data and answer questions about lab results, medications, and medical history. How can I assist you?</p>
                                 </div>
                             </div>
                         </div>
@@ -440,60 +476,23 @@
                                 <button class="quick-question-btn" onclick="askQuickQuestion('drug interactions')">
                                     Check drug interactions
                                 </button>
-                                <button class="quick-question-btn" onclick="askQuickQuestion('lab trends')">
-                                    Analyze lab trends
+                                <button class="quick-question-btn" onclick="askQuickQuestion('lab results')">
+                                    Analyze lab results
                                 </button>
-                                <button class="quick-question-btn" onclick="askQuickQuestion('risk assessment')">
-                                    Risk assessment
-                                </button>
-                                <button class="quick-question-btn" onclick="askQuickQuestion('treatment recommendations')">
-                                    Treatment recommendations
+                                <button class="quick-question-btn" onclick="askQuickQuestion('medical history')">
+                                    Summarize medical history
                                 </button>
                             </div>
                             <div class="chat-input-row">
-                                <input type="text" id="chat-input" class="form-control" placeholder="Ask Llama AI about the patient's medical data..." onkeypress="handleChatKeyPress(event)">
+                                <input type="text" id="chat-input" class="form-control" placeholder="Ask about the patient's medical data..." onkeypress="handleChatKeyPress(event)">
                                 <button class="btn btn--primary" onclick="sendChatMessage()">
                                     <i data-lucide="send"></i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Analytics Tab -->
-                <div id="doctor-analytics-tab" class="tab-content">
-                    <div class="analytics-container">
-                        <h3>Snowflake Analytics Dashboard</h3>
-                        <div class="analytics-grid">
-                            <div class="analytics-card">
-                                <h4>Patient Data Overview</h4>
-                                <div class="metric">
-                                    <span class="metric-value">127</span>
-                                    <span class="metric-label">Total Records in Snowflake</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-value">15</span>
-                                    <span class="metric-label">AI-Processed Documents</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-value">8</span>
-                                    <span class="metric-label">Timeline Events</span>
-                                </div>
-                            </div>
-                            
-                            <div class="analytics-card">
-                                <h4>AI Processing Stats</h4>
-                                <div class="metric">
-                                    <span class="metric-value">98.5%</span>
-                                    <span class="metric-label">LandingAI OCR Accuracy</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-value">4.2s</span>
-                                    <span class="metric-label">Avg Llama Response Time</span>
-                                </div>
-                                <div class="metric">
-                                    <span class="metric-value">12</span>
-                                    <span class="metric-label">CrewAI Agents Deployed</span>
+                            <div id="chat-api-status" class="chat-api-status hidden">
+                                <div class="api-call-indicator">
+                                    <div class="spinner"></div>
+                                    <code>POST https://test.com/chat</code>
                                 </div>
                             </div>
                         </div>
@@ -503,11 +502,12 @@
         </div>
     </section>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay hidden">
+    <!-- API Loading Overlay -->
+    <div id="api-loading-overlay" class="loading-overlay hidden">
         <div class="loading-content">
             <div class="spinner large"></div>
-            <p>Processing with AI Pipeline...</p>
+            <p id="api-loading-text">Calling API...</p>
+            <div id="api-loading-endpoint" class="api-loading-endpoint"></div>
         </div>
     </div>
 
