@@ -14,12 +14,11 @@
         <div class="container flex items-center justify-between">
             <div class="logo">
                 <h2>MediShare</h2>
-                <span class="api-badge">3-API Architecture</span>
             </div>
             <nav class="nav">
                 <button class="btn btn--outline" onclick="showHome()">Home</button>
                 <button class="btn btn--secondary" onclick="showPatientPortal()">Patient Portal</button>
-                <button class="btn btn--outline" onclick="showApiStatus()">API Status</button>
+                <!--<button class="btn btn--outline" onclick="showApiStatus()">API Status</button>-->
             </nav>
         </div>
     </header>
@@ -31,12 +30,14 @@
                 <div class="hero__content">
                     <h1 class="hero__title">Simplified Medical Data Sharing</h1>
                     <div class="architecture-badge">
-                        <span class="badge-3api">3-API Architecture</span>
-                        <span class="badge-simplified">Streamlined Integration</span>
+                        <span class="badge-simplified">Snowflake</span>
+                        <span class="badge-simplified">AWS</span>
+                        <span class="badge-simplified">LLAMA</span>
+                        <span class="badge-simplified">CrewAI</span>
+                        <span class="badge-simplified">LandingAI</span>
                     </div>
                     <p class="hero__description">
-                        Experience the power of simplified healthcare data management with just 3 external APIs: 
-                        Upload, Chat, and Timeline integration for complete medical workflow automation.
+                        Experience the power of simplified healthcare data management with our streamlined document upload, timeline generation, and secure sharing system.
                     </p>
                     <div class="hero__actions">
                         <button class="btn btn--primary btn--lg" onclick="showPatientPortal()">
@@ -52,51 +53,6 @@
             </div>
         </div>
 
-        <!-- API Architecture Section -->
-        <div class="api-architecture">
-            <div class="container">
-                <h2 class="section__title">Simplified 3-API Integration</h2>
-                <div class="api-grid">
-                    <div class="api-card">
-                        <div class="api-icon upload-api">
-                            <i data-lucide="upload"></i>
-                        </div>
-                        <h3>Upload API</h3>
-                        <div class="api-endpoint">https://test.com/upload</div>
-                        <p>Document processing and medical timeline generation</p>
-                        <div class="api-status status--success">
-                            <i data-lucide="check-circle"></i>
-                            Connected
-                        </div>
-                    </div>
-                    <div class="api-card">
-                        <div class="api-icon chat-api">
-                            <i data-lucide="message-circle"></i>
-                        </div>
-                        <h3>Chat API</h3>
-                        <div class="api-endpoint">https://test.com/chat</div>
-                        <p>AI-powered medical chat responses and analysis</p>
-                        <div class="api-status status--success">
-                            <i data-lucide="check-circle"></i>
-                            Connected
-                        </div>
-                    </div>
-                    <div class="api-card">
-                        <div class="api-icon timeline-api">
-                            <i data-lucide="timeline"></i>
-                        </div>
-                        <h3>Timeline API</h3>
-                        <div class="api-endpoint">https://test.com/timeline</div>
-                        <p>Medical timeline retrieval and history management</p>
-                        <div class="api-status status--success">
-                            <i data-lucide="check-circle"></i>
-                            Connected
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- How It Works Section -->
         <div class="workflow-section">
             <div class="container">
@@ -107,7 +63,6 @@
                         <div class="step-content">
                             <h4>Upload Documents</h4>
                             <p>Upload API processes medical documents and generates timeline events</p>
-                            <div class="step-api">API: /upload</div>
                         </div>
                     </div>
                     <div class="workflow-step">
@@ -115,7 +70,6 @@
                         <div class="step-content">
                             <h4>Timeline Generation</h4>
                             <p>Timeline API retrieves and organizes medical history chronologically</p>
-                            <div class="step-api">API: /timeline</div>
                         </div>
                     </div>
                     <div class="workflow-step">
@@ -123,15 +77,12 @@
                         <div class="step-content">
                             <h4>Share with Doctor</h4>
                             <p>Secure token-based sharing enables doctor access to timeline data</p>
-                            <div class="step-api">Token-based</div>
-                        </div>
                     </div>
                     <div class="workflow-step">
                         <div class="step-number">4</div>
                         <div class="step-content">
                             <h4>AI Analysis</h4>
                             <p>Chat API provides intelligent medical insights and analysis</p>
-                            <div class="step-api">API: /chat</div>
                         </div>
                     </div>
                 </div>
@@ -283,11 +234,7 @@
                     <div class="card">
                         <div class="card__body">
                             <div class="api-integration-header">
-                                <h3>Upload API Integration</h3>
-                                <div class="api-endpoint-badge">
-                                    <i data-lucide="globe"></i>
-                                    https://test.com/upload
-                                </div>
+                                <h3>Upload Documents</h3>
                             </div>
                             <div class="upload-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event)" ondragleave="handleDragLeave(event)">
                                 <div class="upload-content">
@@ -319,11 +266,7 @@
                     <div class="card">
                         <div class="card__body">
                             <div class="api-integration-header">
-                                <h3>Timeline API Integration</h3>
-                                <div class="api-endpoint-badge">
-                                    <i data-lucide="globe"></i>
-                                    https://test.com/timeline
-                                </div>
+                                <h3>Timeline</h3>
                                 <button class="btn btn--outline btn--sm" onclick="refreshTimeline()">
                                     <i data-lucide="refresh-cw"></i>
                                     Refresh from API
