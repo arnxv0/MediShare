@@ -22,14 +22,14 @@ const crewAIAgents = {
         description: 'Extracts and structures data from medical documents'
     },
     medicalAnalysis: {
-        name: 'Medical Analysis Agent', 
+        name: 'Medical Analysis Agent',
         status: 'idle',
         activity: [],
         description: 'Analyzes medical content using Llama AI'
     },
     dataStorage: {
         name: 'Data Storage Agent',
-        status: 'idle', 
+        status: 'idle',
         activity: [],
         description: 'Manages Snowflake data operations'
     },
@@ -43,41 +43,41 @@ const crewAIAgents = {
 
 // Medical event types and sample data
 const medicalEventTypes = {
-    "lab_test": {"color": "blue", "icon": "test-tube"},
-    "imaging": {"color": "purple", "icon": "camera"}, 
-    "prescription": {"color": "green", "icon": "pill"},
-    "document": {"color": "gray", "icon": "file-text"}
+    "lab_test": { "color": "blue", "icon": "test-tube" },
+    "imaging": { "color": "purple", "icon": "camera" },
+    "prescription": { "color": "green", "icon": "pill" },
+    "document": { "color": "gray", "icon": "file-text" }
 };
 
 const sampleMedicalData = {
     "labResults": [
-        {"parameter": "Hemoglobin", "value": "14.2", "unit": "g/dL", "normalRange": "12.0-15.5", "status": "normal"},
-        {"parameter": "White Blood Cells", "value": "7.2", "unit": "K/μL", "normalRange": "4.5-11.0", "status": "normal"},
-        {"parameter": "Glucose", "value": "108", "unit": "mg/dL", "normalRange": "70-100", "status": "elevated"},
-        {"parameter": "Cholesterol", "value": "195", "unit": "mg/dL", "normalRange": "<200", "status": "normal"},
-        {"parameter": "Creatinine", "value": "1.1", "unit": "mg/dL", "normalRange": "0.7-1.3", "status": "normal"}
+        { "parameter": "Hemoglobin", "value": "14.2", "unit": "g/dL", "normalRange": "12.0-15.5", "status": "normal" },
+        { "parameter": "White Blood Cells", "value": "7.2", "unit": "K/μL", "normalRange": "4.5-11.0", "status": "normal" },
+        { "parameter": "Glucose", "value": "108", "unit": "mg/dL", "normalRange": "70-100", "status": "elevated" },
+        { "parameter": "Cholesterol", "value": "195", "unit": "mg/dL", "normalRange": "<200", "status": "normal" },
+        { "parameter": "Creatinine", "value": "1.1", "unit": "mg/dL", "normalRange": "0.7-1.3", "status": "normal" }
     ],
     "imagingFindings": [
-        {"finding": "Normal chest X-ray", "severity": "normal", "details": "Clear lung fields bilaterally"},
-        {"finding": "No acute abnormalities", "severity": "normal", "details": "Heart size within normal limits"},
-        {"finding": "Degenerative changes in spine", "severity": "mild", "details": "Age-appropriate changes"}
+        { "finding": "Normal chest X-ray", "severity": "normal", "details": "Clear lung fields bilaterally" },
+        { "finding": "No acute abnormalities", "severity": "normal", "details": "Heart size within normal limits" },
+        { "finding": "Degenerative changes in spine", "severity": "mild", "details": "Age-appropriate changes" }
     ],
     "medications": [
-        {"name": "Metformin", "dosage": "500mg", "frequency": "twice daily", "indication": "Type 2 Diabetes", "prescriber": "Dr. Smith"},
-        {"name": "Lisinopril", "dosage": "10mg", "frequency": "once daily", "indication": "Hypertension", "prescriber": "Dr. Johnson"},
-        {"name": "Atorvastatin", "dosage": "20mg", "frequency": "once daily", "indication": "High Cholesterol", "prescriber": "Dr. Smith"}
+        { "name": "Metformin", "dosage": "500mg", "frequency": "twice daily", "indication": "Type 2 Diabetes", "prescriber": "Dr. Smith" },
+        { "name": "Lisinopril", "dosage": "10mg", "frequency": "once daily", "indication": "Hypertension", "prescriber": "Dr. Johnson" },
+        { "name": "Atorvastatin", "dosage": "20mg", "frequency": "once daily", "indication": "High Cholesterol", "prescriber": "Dr. Smith" }
     ]
 };
 
 const llamaChatResponses = {
     "drug interactions": "🧠 **Llama AI Analysis**: I've analyzed the patient's medications stored in Snowflake. The combination of Metformin, Lisinopril, and Atorvastatin shows good compatibility. However, both Metformin and Lisinopril can affect kidney function, so I recommend monitoring renal parameters every 3-6 months. No major drug interactions detected.",
-    
+
     "lab trends": "📊 **Snowflake Data Analytics**: Based on historical lab data, the patient shows stable trends in most parameters. Glucose levels have increased slightly over the past 6 months (avg: 95→108 mg/dL), suggesting closer diabetes monitoring may be needed. All other values remain within acceptable ranges.",
-    
+
     "risk assessment": "⚕️ **AI Risk Analysis**: Using our ML models, this patient has a low-to-moderate cardiovascular risk profile. Current diabetes management appears effective, but the slight glucose elevation warrants attention. Blood pressure control is excellent with current therapy.",
-    
+
     "treatment recommendations": "💡 **Treatment Insights**: Continue current medication regimen as labs indicate good control. Consider: 1) Dietary consultation for glucose management, 2) Increase monitoring frequency to every 3 months, 3) Consider adding metformin ER for better glucose control if levels continue trending upward.",
-    
+
     "medical history": "📋 **Comprehensive Analysis**: This patient has well-managed Type 2 diabetes (dx 2019) and hypertension (dx 2021). Medication adherence appears excellent based on lab stability. Recent preventive care includes annual physical, mammogram, and colonoscopy - all up to date. No hospitalizations in the past 2 years."
 };
 
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadApiConfig();
     loadPatientData();
     updateApiStatusIndicators();
-    
+
     // Check URL for doctor token
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         showHome();
     }
-    
+
     // Initialize Lucide icons
     setTimeout(() => {
         if (typeof lucide !== 'undefined') {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // API Configuration Management
 function showApiConfig() {
     document.getElementById('api-config-modal').classList.remove('hidden');
-    
+
     // Load current config into form
     document.getElementById('llama-api-key').value = apiConfig.llama.apiKey || '';
     document.getElementById('llama-model').value = apiConfig.llama.model || 'llama-2-70b-chat';
@@ -135,22 +135,22 @@ function saveApiConfig() {
     apiConfig.crewai.apiKey = document.getElementById('crewai-api-key').value;
     apiConfig.crewai.endpoint = document.getElementById('crewai-endpoint').value;
     apiConfig.landingai.apiKey = document.getElementById('landingai-api-key').value;
-    
+
     // Update configuration status
     apiConfig.llama.configured = !!apiConfig.llama.apiKey;
     apiConfig.snowflake.configured = !!(apiConfig.snowflake.account && apiConfig.snowflake.username && apiConfig.snowflake.password);
     apiConfig.crewai.configured = !!apiConfig.crewai.apiKey;
     apiConfig.landingai.configured = !!apiConfig.landingai.apiKey;
-    
+
     // Save to localStorage
     localStorage.setItem('medishare_api_config', JSON.stringify(apiConfig));
-    
+
     // Update UI indicators
     updateApiStatusIndicators();
-    
+
     // Show success notification
     showNotification('API Configuration saved successfully!', 'success');
-    
+
     // Close modal
     closeApiConfig();
 }
@@ -169,7 +169,7 @@ function loadApiConfig() {
 function updateApiStatusIndicators() {
     // Update feature status indicators
     const features = ['llama', 'snowflake', 'crewai', 'landingai'];
-    
+
     features.forEach(feature => {
         const statusElement = document.getElementById(`${feature}-status`);
         if (statusElement) {
@@ -181,16 +181,16 @@ function updateApiStatusIndicators() {
             }
         }
     });
-    
+
     // Update patient portal status indicators
     const llamaStatus = document.getElementById('patient-llama-status');
     const snowflakeStatus = document.getElementById('patient-snowflake-status');
-    
+
     if (llamaStatus) {
         llamaStatus.textContent = apiConfig.llama.configured ? 'Online' : 'Offline';
         llamaStatus.className = `status-indicator ${apiConfig.llama.configured ? 'online' : ''}`;
     }
-    
+
     if (snowflakeStatus) {
         snowflakeStatus.textContent = apiConfig.snowflake.configured ? 'Online' : 'Offline';
         snowflakeStatus.className = `status-indicator ${apiConfig.snowflake.configured ? 'online' : ''}`;
@@ -207,7 +207,7 @@ function showHome() {
 function showPatientPortal() {
     hideAllSections();
     document.getElementById('patient-portal').classList.add('active');
-    
+
     if (currentPatient) {
         document.getElementById('patient-setup').classList.add('hidden');
         document.getElementById('patient-tabs').classList.remove('hidden');
@@ -233,20 +233,20 @@ function setupPatient() {
     const nameInput = document.getElementById('patient-name-input');
     const dobInput = document.getElementById('patient-dob');
     const mrnInput = document.getElementById('patient-mrn');
-    
+
     const name = nameInput.value.trim();
     const dob = dobInput.value;
-    
+
     if (!name) {
         showNotification('Please enter your name', 'error');
         return;
     }
-    
+
     if (!dob) {
         showNotification('Please enter your date of birth', 'error');
         return;
     }
-    
+
     // Create enhanced patient profile
     currentPatient = {
         id: generateId(),
@@ -256,26 +256,26 @@ function setupPatient() {
         createdAt: new Date().toISOString(),
         lastUpdated: new Date().toISOString()
     };
-    
+
     // Initialize patient in Snowflake (simulated)
     if (apiConfig.snowflake.configured) {
         simulateSnowflakePatientInit();
     }
-    
+
     savePatientData();
-    
+
     // Update UI
     document.getElementById('patient-setup').classList.add('hidden');
     document.getElementById('patient-tabs').classList.remove('hidden');
     document.getElementById('patient-name-display').textContent = `Welcome, ${name}`;
-    
+
     // Clear inputs
     [nameInput, dobInput, mrnInput].forEach(input => input.value = '');
-    
+
     // Load demo data and initialize agents
     loadDemoData();
     initializeCrewAIAgents();
-    
+
     showNotification('Patient profile created successfully!', 'success');
 }
 
@@ -285,23 +285,42 @@ function generateMRN() {
 
 // Enhanced file handling with AI pipeline
 function handleFiles(files) {
+
     if (files.length === 0) return;
-    
-    if (!apiConfig.landingai.configured) {
-        showNotification('LandingAI not configured. Please configure APIs first.', 'warning');
-        return;
-    }
-    
+
+    // use the https://test.com/upload endpoint to upload files to Snowflake stage (using post)
+    const fileUploadPromises = Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('patientId', currentPatient.id);
+
+            fetch('https://test.com/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        resolve(file.name);
+                    } else {
+                        reject(`Failed to upload ${file.name}`);
+                    }
+                })
+                .catch(error => reject(`Error uploading ${file.name}: ${error}`));
+        });
+    })
+
+
     const uploadedFilesContainer = document.getElementById('uploaded-files');
     const processingPipeline = document.getElementById('processing-pipeline');
-    
+
     // Show processing pipeline
     processingPipeline.classList.remove('hidden');
-    
+
     Array.from(files).forEach((file, index) => {
         const fileItem = createFileItem(file);
         uploadedFilesContainer.appendChild(fileItem);
-        
+
         // Start AI processing pipeline
         setTimeout(() => {
             processFileWithAIPipeline(file, fileItem, index);
@@ -320,7 +339,7 @@ function createFileItem(file) {
         </div>
         <div class="file-status status status--info">Queued for AI Processing...</div>
     `;
-    
+
     setTimeout(() => lucide.createIcons(), 100);
     return fileItem;
 }
@@ -328,26 +347,26 @@ function createFileItem(file) {
 // Enhanced AI processing pipeline
 async function processFileWithAIPipeline(file, fileItem, index) {
     const pipeline = ['landingai', 'crewai', 'llama', 'snowflake'];
-    
+
     for (let i = 0; i < pipeline.length; i++) {
         const step = pipeline[i];
         await simulateProcessingStep(step, file, fileItem, i);
     }
-    
+
     // Complete processing
     const statusElement = fileItem.querySelector('.file-status');
     statusElement.className = 'file-status status status--success';
     statusElement.textContent = '✅ Processed by AI Pipeline';
-    
+
     // Generate medical events from processed data
     const processedData = generateMedicalEventsFromFile(file);
     addToTimeline(processedData);
-    
+
     // Store in Snowflake (simulated)
     if (apiConfig.snowflake.configured) {
         simulateSnowflakeStorage(file, processedData);
     }
-    
+
     // Hide pipeline after all files processed
     setTimeout(() => {
         document.getElementById('processing-pipeline').classList.add('hidden');
@@ -363,7 +382,7 @@ async function simulateProcessingStep(step, file, fileItem, stepIndex) {
         const indicator = stepElement.querySelector('.step-indicator');
         indicator.innerHTML = '<div class="spinner"></div>';
     }
-    
+
     // Update file status
     const statusElement = fileItem.querySelector('.file-status');
     const stepNames = {
@@ -372,29 +391,29 @@ async function simulateProcessingStep(step, file, fileItem, stepIndex) {
         'llama': 'Llama AI Analysis...',
         'snowflake': 'Storing in Snowflake...'
     };
-    
+
     statusElement.textContent = stepNames[step];
-    
+
     // Activate relevant agents
     if (step === 'crewai') {
         activateAgent('documentParser');
         updateAgentActivity('documentParser', `Processing ${file.name}`);
     }
-    
+
     if (step === 'llama') {
         activateAgent('medicalAnalysis');
         updateAgentActivity('medicalAnalysis', `Analyzing medical content in ${file.name}`);
     }
-    
+
     if (step === 'snowflake') {
         activateAgent('dataStorage');
         updateAgentActivity('dataStorage', `Storing processed data for ${file.name}`);
     }
-    
+
     // Simulate processing time
     const processingTime = 1500 + Math.random() * 1000; // 1.5-2.5 seconds
     await new Promise(resolve => setTimeout(resolve, processingTime));
-    
+
     // Mark step as completed
     if (stepElement) {
         stepElement.classList.add('completed');
@@ -407,15 +426,15 @@ async function simulateProcessingStep(step, file, fileItem, stepIndex) {
 // CrewAI Agent Management
 function initializeCrewAIAgents() {
     if (!apiConfig.crewai.configured) return;
-    
+
     // Reset all agents
     Object.keys(crewAIAgents).forEach(key => {
         crewAIAgents[key].status = 'idle';
         crewAIAgents[key].activity = [];
     });
-    
+
     updateAgentDisplay();
-    
+
     // Activate privacy guardian
     activateAgent('privacyGuardian');
     updateAgentActivity('privacyGuardian', 'Monitoring HIPAA compliance and data security');
@@ -434,12 +453,12 @@ function updateAgentActivity(agentKey, activity) {
             timestamp: new Date().toLocaleTimeString(),
             message: activity
         });
-        
+
         // Keep only last 3 activities
         if (crewAIAgents[agentKey].activity.length > 3) {
             crewAIAgents[agentKey].activity = crewAIAgents[agentKey].activity.slice(0, 3);
         }
-        
+
         updateAgentDisplay();
     }
 }
@@ -447,20 +466,20 @@ function updateAgentActivity(agentKey, activity) {
 function updateAgentDisplay() {
     const agentKeys = ['documentParser', 'medicalAnalysis', 'dataStorage', 'privacyGuardian'];
     const agentIds = ['parser', 'medical', 'storage', 'privacy'];
-    
+
     agentKeys.forEach((key, index) => {
         const agent = crewAIAgents[key];
         const statusElement = document.getElementById(`${agentIds[index]}-agent-status`);
         const activityElement = document.getElementById(`${agentIds[index]}-agent-activity`);
-        
+
         if (statusElement) {
             statusElement.textContent = agent.status.charAt(0).toUpperCase() + agent.status.slice(1);
             statusElement.className = `agent-status ${agent.status}`;
         }
-        
+
         if (activityElement) {
             if (agent.activity.length > 0) {
-                activityElement.innerHTML = agent.activity.map(item => 
+                activityElement.innerHTML = agent.activity.map(item =>
                     `<div class="activity-item"><small>${item.timestamp}</small><br>${item.message}</div>`
                 ).join('');
             } else {
@@ -473,7 +492,7 @@ function updateAgentDisplay() {
 // Enhanced timeline management
 function generateMedicalEventsFromFile(file) {
     const fileName = file.name.toLowerCase();
-    
+
     if (fileName.includes('lab') || fileName.includes('blood')) {
         return generateLabEvent();
     } else if (fileName.includes('xray') || fileName.includes('scan') || fileName.includes('mri')) {
@@ -555,7 +574,7 @@ function addToTimeline(eventData) {
         ...eventData,
         addedAt: new Date().toISOString()
     };
-    
+
     medicalTimeline.push(timelineEvent);
     medicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
     savePatientData();
@@ -564,7 +583,7 @@ function addToTimeline(eventData) {
 function renderTimeline() {
     const container = document.getElementById('timeline-container');
     if (!container) return;
-    
+
     if (medicalTimeline.length === 0) {
         container.innerHTML = `
             <div class="timeline-empty">
@@ -575,7 +594,7 @@ function renderTimeline() {
         setTimeout(() => lucide.createIcons(), 100);
         return;
     }
-    
+
     const timelineHTML = medicalTimeline.map(event => `
         <div class="timeline-item fade-in">
             <div class="timeline-marker timeline-marker--${event.type}">
@@ -598,7 +617,7 @@ function renderTimeline() {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = timelineHTML;
     setTimeout(() => lucide.createIcons(), 100);
 }
@@ -610,13 +629,13 @@ function renderSeverityBadge(severity) {
         'critical': 'status--error',
         'mild': 'status--info'
     };
-    
+
     return `<span class="status ${severityClasses[severity] || 'status--info'}">${severity.toUpperCase()}</span>`;
 }
 
 function renderEventDetails(event) {
     let detailsHTML = '';
-    
+
     // AI Processing Information
     if (event.details.landingaiConfidence) {
         detailsHTML += `
@@ -629,7 +648,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     // Medical Data
     if (event.type === 'lab_test' && event.details.results) {
         detailsHTML += `
@@ -646,7 +665,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     if (event.type === 'imaging' && event.details.findings) {
         detailsHTML += `
             <div class="medical-data">
@@ -660,7 +679,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     if (event.type === 'prescription' && event.details.medications) {
         detailsHTML += `
             <div class="medical-data">
@@ -680,7 +699,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     // Llama AI Analysis
     if (event.details.llamaAnalysis) {
         detailsHTML += `
@@ -690,7 +709,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     // Snowflake Storage Status
     if (event.details.snowflakeStored) {
         detailsHTML += `
@@ -703,7 +722,7 @@ function renderEventDetails(event) {
             </div>
         `;
     }
-    
+
     return detailsHTML;
 }
 
@@ -712,9 +731,9 @@ function regenerateTimeline() {
         showNotification('Llama AI not configured. Please configure APIs first.', 'warning');
         return;
     }
-    
+
     showNotification('Regenerating timeline with Llama AI...', 'info');
-    
+
     setTimeout(() => {
         // Simulate timeline regeneration
         medicalTimeline.forEach(event => {
@@ -722,7 +741,7 @@ function regenerateTimeline() {
                 event.details.llamaAnalysis = "🔄 Timeline regenerated with latest Llama AI model. " + event.details.llamaAnalysis;
             }
         });
-        
+
         renderTimeline();
         showNotification('Timeline regenerated successfully!', 'success');
     }, 2000);
@@ -734,24 +753,19 @@ function generateSecureShareLink() {
         showNotification('Please upload some documents first to generate a shareable timeline.', 'error');
         return;
     }
-    
-    if (!apiConfig.snowflake.configured) {
-        showNotification('Snowflake not configured. Secure sharing requires database connection.', 'warning');
-        return;
-    }
-    
+
     const duration = document.getElementById('access-duration').value;
     const providerEmail = document.getElementById('provider-email').value;
-    
+
     if (!providerEmail) {
         showNotification('Please enter healthcare provider email', 'error');
         return;
     }
-    
+
     const token = generateSecureToken();
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + parseInt(duration));
-    
+
     // Enhanced share data with HIPAA compliance
     const shareData = {
         token: token,
@@ -769,21 +783,21 @@ function generateSecureShareLink() {
             dataLocation: 'Snowflake Secure Cloud'
         }
     };
-    
+
     localStorage.setItem(`medishare_access_${token}`, JSON.stringify(shareData));
-    
+
     // Update UI
     const baseUrl = window.location.origin + window.location.pathname;
     const shareUrl = `${baseUrl}?token=${token}`;
-    
+
     document.getElementById('generated-link').value = shareUrl;
     document.getElementById('expiry-days').textContent = duration;
     document.getElementById('share-link-result').classList.remove('hidden');
-    
+
     // Activate privacy guardian
     activateAgent('privacyGuardian');
     updateAgentActivity('privacyGuardian', `Secure link generated for ${providerEmail}`);
-    
+
     showNotification('HIPAA-compliant secure link generated!', 'success');
 }
 
@@ -791,33 +805,33 @@ function generateSecureShareLink() {
 function verifyAccess() {
     const tokenInput = document.getElementById('access-token-input');
     const token = tokenInput.value.trim();
-    
+
     if (!token) {
         showAccessError('Please enter an access token');
         return;
     }
-    
+
     verifyDoctorAccess(token);
 }
 
 function verifyDoctorAccess(token) {
     const shareDataStr = localStorage.getItem(`medishare_access_${token}`);
-    
+
     if (!shareDataStr) {
         showAccessError('Invalid access token');
         return;
     }
-    
+
     const shareData = JSON.parse(shareDataStr);
-    
+
     if (new Date(shareData.expiryDate) < new Date()) {
         showAccessError('Access token has expired');
         return;
     }
-    
+
     currentDoctorPatient = shareData;
     showDoctorInterface();
-    
+
     // Log access for HIPAA compliance
     const auditEntry = {
         timestamp: new Date().toISOString(),
@@ -825,7 +839,7 @@ function verifyDoctorAccess(token) {
         patientId: shareData.patientId,
         provider: shareData.providerEmail || 'Unknown'
     };
-    
+
     console.log('HIPAA Audit Log:', auditEntry);
 }
 
@@ -833,7 +847,7 @@ function showDoctorInterface() {
     hideAllSections();
     document.getElementById('doctor-interface').classList.add('active');
     document.getElementById('doctor-patient-name').textContent = `Patient: ${currentDoctorPatient.patientName}`;
-    
+
     renderDoctorTimeline();
     updateDoctorAnalytics();
 }
@@ -841,17 +855,17 @@ function showDoctorInterface() {
 function showDoctorTab(tabName) {
     const tabButtons = document.querySelectorAll('#doctor-interface .tab-button');
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    
-    const clickedButton = Array.from(tabButtons).find(btn => 
+
+    const clickedButton = Array.from(tabButtons).find(btn =>
         btn.onclick && btn.onclick.toString().includes(tabName)
     );
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
-    
+
     document.querySelectorAll('#doctor-interface .tab-content').forEach(content => content.classList.remove('active'));
     document.getElementById(`doctor-${tabName}-tab`).classList.add('active');
-    
+
     if (tabName === 'analytics') {
         updateDoctorAnalytics();
     }
@@ -860,14 +874,14 @@ function showDoctorTab(tabName) {
 function renderDoctorTimeline() {
     const container = document.getElementById('doctor-timeline-container');
     if (!container || !currentDoctorPatient) return;
-    
+
     const timeline = currentDoctorPatient.timeline || [];
-    
+
     if (timeline.length === 0) {
         container.innerHTML = '<div class="timeline-empty"><p>No medical timeline data available</p></div>';
         return;
     }
-    
+
     const timelineHTML = timeline.map(event => `
         <div class="timeline-item fade-in">
             <div class="timeline-marker timeline-marker--${event.type}">
@@ -890,18 +904,18 @@ function renderDoctorTimeline() {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = timelineHTML;
     setTimeout(() => lucide.createIcons(), 100);
 }
 
 function updateDoctorAnalytics() {
     if (!currentDoctorPatient) return;
-    
+
     const timeline = currentDoctorPatient.timeline || [];
     const totalRecords = timeline.length * 15 + Math.floor(Math.random() * 50); // Simulated
     const aiProcessedDocs = timeline.filter(event => event.details && event.details.llamaAnalysis).length;
-    
+
     // Update metrics
     const metrics = document.querySelectorAll('.metric-value');
     if (metrics.length >= 6) {
@@ -919,9 +933,9 @@ function exportToSnowflake() {
         showNotification('Snowflake not configured. Please configure APIs first.', 'warning');
         return;
     }
-    
+
     showNotification('Exporting timeline data to Snowflake...', 'info');
-    
+
     setTimeout(() => {
         showNotification('Timeline data exported to Snowflake successfully!', 'success');
     }, 2000);
@@ -931,19 +945,19 @@ function exportToSnowflake() {
 function sendChatMessage() {
     const input = document.getElementById('chat-input');
     const message = input.value.trim();
-    
+
     if (!message) return;
-    
+
     if (!apiConfig.llama.configured) {
         showNotification('Llama AI not configured. Please configure APIs first.', 'warning');
         return;
     }
-    
+
     addChatMessage(message, 'user');
     input.value = '';
-    
+
     showTypingIndicator();
-    
+
     setTimeout(() => {
         hideTypingIndicator();
         const response = generateEnhancedLlamaResponse(message);
@@ -953,37 +967,37 @@ function sendChatMessage() {
 
 function generateEnhancedLlamaResponse(message) {
     const lowerMessage = message.toLowerCase();
-    
+
     // Enhanced response mapping
     if (lowerMessage.includes('drug') && lowerMessage.includes('interaction')) {
         return llamaChatResponses['drug interactions'];
     }
-    
+
     if (lowerMessage.includes('lab') && (lowerMessage.includes('trend') || lowerMessage.includes('analysis'))) {
         return llamaChatResponses['lab trends'];
     }
-    
+
     if (lowerMessage.includes('risk')) {
         return llamaChatResponses['risk assessment'];
     }
-    
+
     if (lowerMessage.includes('treatment') || lowerMessage.includes('recommend')) {
         return llamaChatResponses['treatment recommendations'];
     }
-    
+
     if (lowerMessage.includes('history') || lowerMessage.includes('summary')) {
         return llamaChatResponses['medical history'];
     }
-    
+
     // New enhanced responses
     if (lowerMessage.includes('snowflake') || lowerMessage.includes('data')) {
         return "📊 **Snowflake Data Query**: I can access the patient's complete medical record stored securely in Snowflake. The database contains structured lab results, imaging reports, medication history, and AI-processed insights. Would you like me to run a specific query?";
     }
-    
+
     if (lowerMessage.includes('ai') || lowerMessage.includes('analysis')) {
         return "🤖 **AI Processing Summary**: This patient's data has been processed through our complete AI pipeline: LandingAI for document OCR (96% accuracy), CrewAI agents for data structuring, and my Llama AI analysis for medical insights. All findings are stored securely in Snowflake.";
     }
-    
+
     // Default enhanced response
     return "🩺 **Llama AI Medical Assistant**: I've analyzed the patient's comprehensive medical data from Snowflake. I can help with medication analysis, lab trend interpretation, risk assessment, treatment recommendations, or answer specific clinical questions. What would you like to know?";
 }
@@ -1001,9 +1015,9 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.remove();
     }, 4000);
@@ -1014,7 +1028,7 @@ function showAccessError(message) {
     if (errorElement) {
         errorElement.textContent = message;
         errorElement.classList.remove('hidden');
-        
+
         setTimeout(() => {
             errorElement.classList.add('hidden');
         }, 5000);
@@ -1025,17 +1039,17 @@ function showAccessError(message) {
 function showTab(tabName) {
     const tabButtons = document.querySelectorAll('#patient-tabs .tab-button');
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    
-    const clickedButton = Array.from(tabButtons).find(btn => 
+
+    const clickedButton = Array.from(tabButtons).find(btn =>
         btn.onclick && btn.onclick.toString().includes(tabName)
     );
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
-    
+
     document.querySelectorAll('#patient-tabs .tab-content').forEach(content => content.classList.remove('active'));
     document.getElementById(`${tabName}-tab`).classList.add('active');
-    
+
     if (tabName === 'timeline') {
         renderTimeline();
     } else if (tabName === 'agents') {
@@ -1046,7 +1060,7 @@ function showTab(tabName) {
 function toggleEventDetails(eventId) {
     const detailsElement = document.getElementById(`details-${eventId}`);
     const button = detailsElement.previousElementSibling;
-    
+
     if (detailsElement.classList.contains('show')) {
         detailsElement.classList.remove('show');
         button.innerHTML = '<i data-lucide="chevron-down"></i> View AI Analysis';
@@ -1054,17 +1068,17 @@ function toggleEventDetails(eventId) {
         detailsElement.classList.add('show');
         button.innerHTML = '<i data-lucide="chevron-up"></i> Hide Analysis';
     }
-    
+
     setTimeout(() => lucide.createIcons(), 100);
 }
 
 function filterTimeline() {
     const filter = document.getElementById('timeline-filter').value;
     if (!currentDoctorPatient) return;
-    
+
     const timeline = currentDoctorPatient.timeline || [];
     let filteredTimeline = filter !== 'all' ? timeline.filter(event => event.type === filter) : timeline;
-    
+
     const originalTimeline = currentDoctorPatient.timeline;
     currentDoctorPatient.timeline = filteredTimeline;
     renderDoctorTimeline();
@@ -1073,14 +1087,14 @@ function filterTimeline() {
 
 function askQuickQuestion(questionType) {
     const input = document.getElementById('chat-input');
-    
+
     const quickQuestions = {
         'drug interactions': 'Can you check for any drug interactions in this patient\'s medications using Snowflake data?',
         'lab trends': 'Can you analyze the lab result trends over time from the Snowflake database?',
         'risk assessment': 'Can you provide a comprehensive risk assessment for this patient?',
         'treatment recommendations': 'Based on the AI analysis, what treatment recommendations do you have?'
     };
-    
+
     input.value = quickQuestions[questionType] || questionType;
     sendChatMessage();
 }
@@ -1116,7 +1130,7 @@ function handleChatKeyPress(event) {
 function addChatMessage(message, sender) {
     const messagesContainer = document.getElementById('chat-messages');
     if (!messagesContainer) return;
-    
+
     const messageElement = document.createElement('div');
     messageElement.className = `chat-message chat-message--${sender} fade-in`;
     messageElement.innerHTML = `
@@ -1124,7 +1138,7 @@ function addChatMessage(message, sender) {
             <p>${message}</p>
         </div>
     `;
-    
+
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
@@ -1132,7 +1146,7 @@ function addChatMessage(message, sender) {
 function showTypingIndicator() {
     const messagesContainer = document.getElementById('chat-messages');
     if (!messagesContainer) return;
-    
+
     const typingElement = document.createElement('div');
     typingElement.className = 'chat-message chat-message--assistant typing-indicator';
     typingElement.id = 'typing-indicator';
@@ -1148,7 +1162,7 @@ function showTypingIndicator() {
             </div>
         </div>
     `;
-    
+
     messagesContainer.appendChild(typingElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
@@ -1164,7 +1178,7 @@ function copyLink() {
     const linkInput = document.getElementById('generated-link');
     linkInput.select();
     linkInput.setSelectionRange(0, 99999);
-    
+
     try {
         document.execCommand('copy');
         showNotification('Secure link copied to clipboard!', 'success');
@@ -1281,7 +1295,7 @@ function loadDemoData() {
             }
         }
     ];
-    
+
     medicalTimeline = sampleEvents;
     savePatientData();
 }

@@ -149,50 +149,6 @@
         <!-- Features Section -->
         <div class="features">
             <div class="container">
-                <h2 class="section__title">Platform Architecture</h2>
-                <div class="features__grid">
-                    <div class="feature">
-                        <div class="feature__icon">
-                            <i data-lucide="brain"></i>
-                        </div>
-                        <h3>Llama AI Processing</h3>
-                        <p>Advanced language model for medical document analysis, timeline generation, and intelligent chat responses</p>
-                        <div class="feature-status" id="llama-status">
-                            <span class="status status--error">Not Configured</span>
-                        </div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature__icon">
-                            <i data-lucide="users"></i>
-                        </div>
-                        <h3>CrewAI Orchestration</h3>
-                        <p>Multi-agent system coordinating document processing, data extraction, and workflow automation</p>
-                        <div class="feature-status" id="crewai-status">
-                            <span class="status status--error">Not Configured</span>
-                        </div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature__icon">
-                            <i data-lucide="database"></i>
-                        </div>
-                        <h3>Snowflake Storage</h3>
-                        <p>Secure, scalable data warehouse for storing patient information, documents, and analytics</p>
-                        <div class="feature-status" id="snowflake-status">
-                            <span class="status status--error">Not Configured</span>
-                        </div>
-                    </div>
-                    <div class="feature">
-                        <div class="feature__icon">
-                            <i data-lucide="image"></i>
-                        </div>
-                        <h3>LandingAI Vision</h3>
-                        <p>Computer vision for analyzing medical images, extracting text from documents, and data validation</p>
-                        <div class="feature-status" id="landingai-status">
-                            <span class="status status--error">Not Configured</span>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="architecture-flow">
                     <h3>Data Processing Pipeline</h3>
                     <div class="pipeline">
@@ -232,18 +188,6 @@
             <div class="portal-header">
                 <h1>Patient Portal</h1>
                 <p id="patient-name-display" class="patient-info">Welcome to MediShare AI Platform</p>
-                <div class="ai-status-bar">
-                    <div class="status-item">
-                        <i data-lucide="brain"></i>
-                        <span>Llama AI: </span>
-                        <span id="patient-llama-status" class="status-indicator">Offline</span>
-                    </div>
-                    <div class="status-item">
-                        <i data-lucide="database"></i>
-                        <span>Snowflake: </span>
-                        <span id="patient-snowflake-status" class="status-indicator">Offline</span>
-                    </div>
-                </div>
             </div>
 
             <!-- Patient Profile Setup -->
@@ -279,10 +223,6 @@
                     <button class="tab-button" onclick="showTab('timeline')">
                         <i data-lucide="timeline"></i>
                         AI Timeline
-                    </button>
-                    <button class="tab-button" onclick="showTab('agents')">
-                        <i data-lucide="users"></i>
-                        AI Agents
                     </button>
                     <button class="tab-button" onclick="showTab('share')">
                         <i data-lucide="share"></i>
@@ -345,67 +285,11 @@
                         <div class="card__body">
                             <div class="timeline-header-controls">
                                 <h3>Your AI-Generated Medical Timeline</h3>
-                                <div class="timeline-controls">
-                                    <button class="btn btn--outline btn--sm" onclick="regenerateTimeline()">
-                                        <i data-lucide="refresh-cw"></i>
-                                        Regenerate with Llama AI
-                                    </button>
-                                </div>
                             </div>
                             <div id="timeline-container" class="timeline-container">
                                 <div class="timeline-empty">
                                     <i data-lucide="calendar"></i>
                                     <p>Upload documents to generate your AI-powered medical timeline</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI Agents Tab -->
-                <div id="agents-tab" class="tab-content">
-                    <div class="card">
-                        <div class="card__body">
-                            <h3>CrewAI Agent Activity</h3>
-                            <div class="agents-container">
-                                <div class="agent-card">
-                                    <div class="agent-header">
-                                        <i data-lucide="file-text"></i>
-                                        <h4>Document Parser Agent</h4>
-                                        <span class="agent-status" id="parser-agent-status">Idle</span>
-                                    </div>
-                                    <p>Specializes in extracting structured data from medical documents using LandingAI OCR results.</p>
-                                    <div class="agent-activity" id="parser-agent-activity"></div>
-                                </div>
-                                
-                                <div class="agent-card">
-                                    <div class="agent-header">
-                                        <i data-lucide="brain"></i>
-                                        <h4>Medical Analysis Agent</h4>
-                                        <span class="agent-status" id="medical-agent-status">Idle</span>
-                                    </div>
-                                    <p>Works with Llama AI to analyze medical content and generate timeline events.</p>
-                                    <div class="agent-activity" id="medical-agent-activity"></div>
-                                </div>
-                                
-                                <div class="agent-card">
-                                    <div class="agent-header">
-                                        <i data-lucide="database"></i>
-                                        <h4>Data Storage Agent</h4>
-                                        <span class="agent-status" id="storage-agent-status">Idle</span>
-                                    </div>
-                                    <p>Manages secure data storage and retrieval operations with Snowflake.</p>
-                                    <div class="agent-activity" id="storage-agent-activity"></div>
-                                </div>
-                                
-                                <div class="agent-card">
-                                    <div class="agent-header">
-                                        <i data-lucide="shield-check"></i>
-                                        <h4>Privacy Guardian Agent</h4>
-                                        <span class="agent-status" id="privacy-agent-status">Idle</span>
-                                    </div>
-                                    <p>Ensures HIPAA compliance and manages access controls for shared data.</p>
-                                    <div class="agent-activity" id="privacy-agent-activity"></div>
                                 </div>
                             </div>
                         </div>
@@ -431,22 +315,6 @@
                                         <option value="90">90 days</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Data Permissions</label>
-                                    <div class="checkbox-group">
-                                        <label class="checkbox-label">
-                                            <input type="checkbox" checked> Full Timeline Access
-                                        </label>
-                                        <label class="checkbox-label">
-                                            <input type="checkbox" checked> AI Analysis Results
-                                        </label>
-                                        <label class="checkbox-label">
-                                            <input type="checkbox" checked> Original Documents
-                                        </label>
-                                        <label class="checkbox-label">
-                                            <input type="checkbox"> Lab Values Trending
-                                        </label>
-                                    </div>
                                 </div>
                                 <button class="btn btn--primary btn--full-width" onclick="generateSecureShareLink()" id="generate-link-btn">
                                     <i data-lucide="link"></i>
