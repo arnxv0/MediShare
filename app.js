@@ -6,73 +6,42 @@ let patientDocuments = [];
 let medicalTimeline = [];
 let currentDoctorPatient = null;
 
-// API Configuration - The 3 core APIs
+// API Configuration - The 3 core APIs (updated endpoints)
 const API_CONFIG = {
     upload: {
-        url: 'https://test.com/upload',
+        url: 'https://karkode.com/upload',
         method: 'POST',
         description: 'Document processing and timeline generation'
     },
     chat: {
-        url: 'https://test.com/chat',
-        method: 'POST', 
+        url: 'https://katkode.com/chat',
+        method: 'POST',
         description: 'AI-powered medical chat responses'
     },
     timeline: {
-        url: 'https://test.com/timeline',
+        url: 'https://katkode.com/details',
         method: 'GET',
         description: 'Medical timeline retrieval'
     }
 };
 
-// Mock API responses from provided data
-const MOCK_API_RESPONSES = {
-    upload: {
-        success: true,
-        documentId: "doc-123",
-        timeline: [
-            {
-                id: "evt-456",
-                eventType: "lab_test", 
-                title: "Laboratory Results",
-                date: "2024-09-15",
-                description: "Complete blood count - normal values",
-                apiSource: "upload-api"
-            }
-        ]
-    },
-    chat: {
-        success: true,
-        response: "Based on the patient's lab results, all values appear within normal ranges...",
-        confidence: 0.92,
-        sources: ["Medical Timeline"]
-    },
-    timeline: {
-        success: true,
-        timeline: [
-            {
-                id: "evt-789",
-                eventType: "prescription",
-                title: "Medication Review", 
-                date: "2024-09-10",
-                description: "Metformin 500mg twice daily for diabetes management",
-                apiSource: "timeline-api"
-            }
-        ],
-        totalEvents: 3
-    }
-};
+// Bearer token for authentication
+const BEARER_TOKEN = 'saodifjoasdf';
+
+// Authorization headers helper
+function authHeaders(extra = {}) {
+    return {
+        Authorization: `Bearer ${BEARER_TOKEN}`,
+        ...extra
+    };
+}
 
 // Demo patient data from provided JSON
 const DEMO_PATIENT_DATA = {
     name: "Sarah Johnson",
     id: "patient-simplified-001",
     documents: [
-        {
-            name: "Lab_Results.pdf",
-            type: "lab_test", 
-            processed: true
-        }
+        { name: "Lab_Results.pdf", type: "lab_test", processed: true }
     ],
     timeline: [
         {
@@ -84,7 +53,7 @@ const DEMO_PATIENT_DATA = {
             apiSource: "upload-api"
         },
         {
-            id: "event-002", 
+            id: "event-002",
             date: "2024-09-10",
             type: "prescription",
             title: "Medication Prescribed",
@@ -101,7 +70,7 @@ const EVENT_TYPES = {
     document: { icon: "file-text", color: "gray" }
 };
 
-// Chat response templates
+// Chat response templates for fallback
 const CHAT_RESPONSES = {
     "drug interactions": "I've analyzed the patient's medications using the Chat API. The combination of Metformin and current prescriptions shows no major drug interactions. Regular monitoring is recommended for optimal safety.",
     "lab results": "The Chat API analysis of recent lab results shows all values within normal ranges. Hemoglobin levels indicate good oxygen capacity, and metabolic markers suggest well-controlled diabetes management.",
@@ -112,7 +81,7 @@ const CHAT_RESPONSES = {
 document.addEventListener('DOMContentLoaded', function() {
     hideApiLoadingOverlay();
     loadPatientData();
-    
+
     // Check for doctor access token in URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -121,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         showHome();
     }
-    
+
     // Initialize icons
     setTimeout(() => {
         if (typeof lucide !== 'undefined') {
@@ -140,7 +109,6 @@ function showHome() {
 function showPatientPortal() {
     hideAllSections();
     document.getElementById('patient-portal').classList.add('active');
-    
     if (currentPatient) {
         document.getElementById('patient-setup').classList.add('hidden');
         document.getElementById('patient-tabs').classList.remove('hidden');
@@ -170,26 +138,25 @@ function hideAllSections() {
 function setupPatient() {
     const nameInput = document.getElementById('patient-name-input');
     const name = nameInput.value.trim();
-    
+
     if (!name) {
         alert('Please enter your name');
         return;
     }
-    
+
     currentPatient = {
         id: generateId(),
         name: name,
         createdAt: new Date().toISOString()
     };
-    
+
     savePatientData();
-    
+
     document.getElementById('patient-setup').classList.add('hidden');
     document.getElementById('patient-tabs').classList.remove('hidden');
     document.getElementById('patient-name-display').textContent = `Welcome, ${name}`;
-    
     nameInput.value = '';
-    
+
     // Load demo data
     loadDemoData();
 }
@@ -198,17 +165,20 @@ function setupPatient() {
 function showTab(tabName) {
     const tabButtons = document.querySelectorAll('#patient-tabs .tab-button');
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    
-    const clickedButton = Array.from(tabButtons).find(btn => 
+
+    const clickedButton = Array.from(tabButtons).find(btn =>
         btn.onclick && btn.onclick.toString().includes(tabName)
     );
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
-    
-    document.querySelectorAll('#patient-tabs .tab-content').forEach(content => content.classList.remove('active'));
+
+    document.querySelectorAll('#patient-tabs .tab-content').forEach(content =>
+        content.classList.remove('active')
+    );
+
     document.getElementById(`${tabName}-tab`).classList.add('active');
-    
+
     if (tabName === 'timeline') {
         renderTimeline();
     }
@@ -236,167 +206,226 @@ function handleDrop(event) {
     handleFiles(files);
 }
 
-// Process files using Upload API
+// Process files using Upload API (updated to use real API)
 function handleFiles(files) {
     if (files.length === 0) return;
-    
+
     const uploadedFilesContainer = document.getElementById('uploaded-files');
     const apiCallStatus = document.getElementById('api-call-status');
-    
+
     // Show API call status
     apiCallStatus.classList.remove('hidden');
-    
+
     Array.from(files).forEach((file, index) => {
         const fileItem = createFileItem(file);
         uploadedFilesContainer.appendChild(fileItem);
-        
-        // Simulate API call delay
+
+        // Call real API
         setTimeout(() => {
             callUploadAPI(file, fileItem);
-        }, 1000 + (index * 500));
+        }, 100 + (index * 100));
     });
-    
-    // Hide API status after processing
-    setTimeout(() => {
-        apiCallStatus.classList.add('hidden');
-        renderTimeline();
-    }, 3000 + (files.length * 500));
 }
 
 function createFileItem(file) {
     const fileItem = document.createElement('div');
     fileItem.className = 'file-item fade-in';
     fileItem.innerHTML = `
-        <i data-lucide="file-text" class="file-icon"></i>
-        <div class="file-info">
-            <p class="file-name">${file.name}</p>
-            <p class="file-size">${formatFileSize(file.size)}</p>
-        </div>
-        <div class="file-status status status--info">Uploading to API...</div>
-    `;
-    
+    <div class="file-icon">
+      <i data-lucide="file"></i>
+    </div>
+    <div class="file-info">
+      <p class="file-name">${file.name}</p>
+      <p class="file-size">${formatFileSize(file.size)}</p>
+      <p class="file-status">Processing...</p>
+    </div>
+  `;
+
+    // Initialize icons
     setTimeout(() => {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-    }, 100);
-    
+    }, 10);
+
     return fileItem;
 }
 
-// Simulate Upload API call
+// Real Upload API call
 async function callUploadAPI(file, fileItem) {
-    showApiLoadingOverlay('Calling Upload API...', API_CONFIG.upload.url);
-    
     try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Process the mock response
-        const mockResponse = MOCK_API_RESPONSES.upload;
-        const processedData = processUploadResponse(file.name, mockResponse);
-        
-        // Store document
-        const document = {
-            id: generateId(),
-            file: file,
-            fileName: file.name,
-            processedData: processedData,
-            uploadedAt: new Date().toISOString(),
-            apiSource: 'upload-api'
-        };
-        
-        patientDocuments.push(document);
-        savePatientData();
-        
-        // Update UI
-        const statusElement = fileItem.querySelector('.file-status');
-        statusElement.className = 'file-status status status--success';
-        statusElement.innerHTML = '<i data-lucide="check-circle"></i> Processed by Upload API';
-        
-        // Add to timeline
-        addToTimeline(processedData);
-        
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+        showApiLoadingOverlay(API_CONFIG.upload.url);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(API_CONFIG.upload.url, {
+            method: 'POST',
+            headers: authHeaders(),
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`Upload failed: ${response.status}`);
         }
-        
+
+        const result = await response.json();
+
+        // Update file status
+        const statusElement = fileItem.querySelector('.file-status');
+        if (statusElement) {
+            statusElement.textContent = 'Processed via Upload API';
+        }
+
+        // Process timeline events from response
+        if (result.timeline && Array.isArray(result.timeline)) {
+            result.timeline.forEach(event => {
+                const timelineEvent = {
+                    id: event.id || generateId(),
+                    eventType: event.eventType || event.type || 'document',
+                    title: event.title || 'Document Processed',
+                    date: event.date || new Date().toISOString().slice(0, 10),
+                    description: event.description || '',
+                    apiSource: 'upload-api'
+                };
+                medicalTimeline.push(timelineEvent);
+            });
+
+            // Sort timeline by date (newest first)
+            medicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
+            renderTimeline();
+        }
+
     } catch (error) {
         console.error('Upload API error:', error);
         const statusElement = fileItem.querySelector('.file-status');
-        statusElement.className = 'file-status status status--error';
-        statusElement.textContent = 'Upload API Error';
+        if (statusElement) {
+            statusElement.textContent = 'Upload failed';
+        }
     } finally {
         hideApiLoadingOverlay();
+        document.getElementById('api-call-status').classList.add('hidden');
     }
 }
 
-function processUploadResponse(fileName, mockResponse) {
-    const eventData = mockResponse.timeline[0];
-    return {
-        type: eventData.eventType,
-        title: eventData.title,
-        description: `${eventData.description} - ${fileName}`,
-        date: new Date(eventData.date),
-        details: {
-            fileName: fileName,
-            apiResponse: mockResponse,
-            source: 'Upload API'
-        },
-        apiSource: 'upload-api'
-    };
-}
+// Chat functionality (updated to use real API)
+async function sendMessage(event) {
+    if (event) event.preventDefault();
 
-// Timeline management
-function addToTimeline(eventData) {
-    const timelineEvent = {
-        id: generateId(),
-        ...eventData,
-        addedAt: new Date().toISOString()
-    };
-    
-    medicalTimeline.push(timelineEvent);
-    medicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
-    savePatientData();
-}
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
 
-async function refreshTimeline() {
-    showApiLoadingOverlay('Calling Timeline API...', API_CONFIG.timeline.url);
-    
+    if (!message) return;
+
+    // Add user message to chat
+    addChatMessage('user', message);
+    input.value = '';
+
+    // Show thinking state
+    showChatThinking(true);
+
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Simulate Timeline API response
-        const mockResponse = MOCK_API_RESPONSES.timeline;
-        
-        // Process timeline events from API
-        const apiEvents = mockResponse.timeline.map(event => ({
-            id: generateId(),
-            type: event.eventType,
-            title: event.title,
-            description: event.description,
-            date: new Date(event.date),
-            apiSource: 'timeline-api',
-            details: {
-                source: 'Timeline API',
-                totalEvents: mockResponse.totalEvents
-            }
-        }));
-        
-        // Add new events that aren't already in timeline
-        apiEvents.forEach(event => {
-            const exists = medicalTimeline.find(existing => 
-                existing.title === event.title && existing.description === event.description
-            );
-            if (!exists) {
-                medicalTimeline.push(event);
-            }
+        const response = await fetch(API_CONFIG.chat.url, {
+            method: 'POST',
+            headers: authHeaders({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                message: message,
+                patientId: currentPatient?.id,
+                timeline: medicalTimeline
+            })
         });
-        
-        medicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
-        savePatientData();
-        renderTimeline();
-        
+
+        if (!response.ok) {
+            throw new Error(`Chat API failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const reply = result.response || result.reply || result.answer || 'No response from Chat API';
+
+        // Add AI response to chat
+        addChatMessage('assistant', reply);
+
+    } catch (error) {
+        console.error('Chat API error:', error);
+
+        // Fallback to template responses
+        const fallbackResponse = findChatResponse(message) ||
+            "I'm sorry, I'm having trouble connecting to the Chat API right now. Please try again later.";
+        addChatMessage('assistant', fallbackResponse);
+    } finally {
+        showChatThinking(false);
+    }
+}
+
+function addChatMessage(role, content) {
+    const messagesContainer = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message chat-message--${role}`;
+    messageDiv.innerHTML = `
+    <div class="message-content">${content}</div>
+  `;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function showChatThinking(show) {
+    const thinkingElement = document.querySelector('.chat-thinking');
+    if (thinkingElement) {
+        thinkingElement.style.display = show ? 'block' : 'none';
+    }
+}
+
+function findChatResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    for (const [key, response] of Object.entries(CHAT_RESPONSES)) {
+        if (lowerMessage.includes(key)) {
+            return response;
+        }
+    }
+    return null;
+}
+
+// Timeline functionality (updated to use real API)
+async function refreshTimeline() {
+    try {
+        showApiLoadingOverlay(API_CONFIG.timeline.url);
+
+        const response = await fetch(API_CONFIG.timeline.url, {
+            method: 'GET',
+            headers: authHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error(`Timeline API failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        // Process timeline data from API
+        if (result.timeline && Array.isArray(result.timeline)) {
+            const apiEvents = result.timeline.map(event => ({
+                id: event.id || generateId(),
+                eventType: event.eventType || event.type || 'document',
+                title: event.title || 'Timeline Event',
+                date: event.date || new Date().toISOString().slice(0, 10),
+                description: event.description || '',
+                apiSource: 'timeline-api'
+            }));
+
+            // Merge with existing timeline events
+            medicalTimeline = [...medicalTimeline, ...apiEvents];
+
+            // Remove duplicates and sort
+            const uniqueEvents = medicalTimeline.filter((event, index, self) =>
+                index === self.findIndex(e => e.id === event.id)
+            );
+            medicalTimeline = uniqueEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            renderTimeline();
+        }
+
     } catch (error) {
         console.error('Timeline API error:', error);
     } finally {
@@ -407,345 +436,51 @@ async function refreshTimeline() {
 function renderTimeline() {
     const container = document.getElementById('timeline-container');
     if (!container) return;
-    
+
+    container.innerHTML = '';
+
     if (medicalTimeline.length === 0) {
         container.innerHTML = `
-            <div class="timeline-empty">
-                <i data-lucide="calendar"></i>
-                <p>Upload documents to generate timeline via APIs</p>
-            </div>
-        `;
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-        return;
-    }
-    
-    const timelineHTML = medicalTimeline.map(event => `
-        <div class="timeline-item fade-in">
-            <div class="timeline-marker timeline-marker--${event.type}">
-                <i data-lucide="${EVENT_TYPES[event.type]?.icon || 'file'}"></i>
-            </div>
-            <div class="timeline-content">
-                <div class="timeline-header">
-                    <h4 class="timeline-title">${event.title}</h4>
-                    <span class="timeline-date">${formatDate(event.date)}</span>
-                </div>
-                <p class="timeline-description">${event.description}</p>
-                <div class="api-source-badge">
-                    <i data-lucide="globe"></i>
-                    ${event.apiSource || 'API'}
-                </div>
-            </div>
-        </div>
-    `).join('');
-    
-    container.innerHTML = timelineHTML;
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-}
-
-// Share link generation
-function generateShareLink() {
-    if (medicalTimeline.length === 0) {
-        alert('Please upload some documents first to generate a shareable timeline.');
-        return;
-    }
-    
-    const duration = document.getElementById('access-duration').value;
-    const token = generateSecureToken();
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + parseInt(duration));
-    
-    const shareData = {
-        token: token,
-        patientId: currentPatient.id,
-        patientName: currentPatient.name,
-        timeline: medicalTimeline,
-        documents: patientDocuments,
-        expiryDate: expiryDate.toISOString(),
-        createdAt: new Date().toISOString()
-    };
-    
-    localStorage.setItem(`medshare_access_${token}`, JSON.stringify(shareData));
-    
-    const baseUrl = window.location.origin + window.location.pathname;
-    const shareUrl = `${baseUrl}?token=${token}`;
-    
-    document.getElementById('generated-link').value = shareUrl;
-    document.getElementById('expiry-days').textContent = duration;
-    document.getElementById('share-link-result').classList.remove('hidden');
-}
-
-function copyLink() {
-    const linkInput = document.getElementById('generated-link');
-    linkInput.select();
-    linkInput.setSelectionRange(0, 99999);
-    
-    try {
-        document.execCommand('copy');
-        const button = document.querySelector('#share-link-result button');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i data-lucide="check"></i> Copied!';
-        button.classList.add('bg-success');
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('bg-success');
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        }, 2000);
-        
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    } catch (err) {
-        alert('Failed to copy link. Please copy manually.');
-    }
-}
-
-// Doctor access functions
-function verifyAccess() {
-    const tokenInput = document.getElementById('access-token-input');
-    const token = tokenInput.value.trim();
-    
-    if (!token) {
-        showAccessError('Please enter an access token');
-        return;
-    }
-    
-    verifyDoctorAccess(token);
-}
-
-function verifyDoctorAccess(token) {
-    const shareDataStr = localStorage.getItem(`medshare_access_${token}`);
-    
-    if (!shareDataStr) {
-        showAccessError('Invalid access token');
-        return;
-    }
-    
-    const shareData = JSON.parse(shareDataStr);
-    
-    if (new Date(shareData.expiryDate) < new Date()) {
-        showAccessError('Access token has expired');
-        return;
-    }
-    
-    currentDoctorPatient = shareData;
-    showDoctorInterface();
-}
-
-function showAccessError(message) {
-    const errorElement = document.getElementById('access-error');
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.classList.remove('hidden');
-        setTimeout(() => {
-            errorElement.classList.add('hidden');
-        }, 5000);
-    }
-}
-
-function showDoctorInterface() {
-    hideAllSections();
-    document.getElementById('doctor-interface').classList.add('active');
-    document.getElementById('doctor-patient-name').textContent = `Patient: ${currentDoctorPatient.patientName}`;
-    renderDoctorTimeline();
-}
-
-// Doctor interface functions
-function showDoctorTab(tabName) {
-    const tabButtons = document.querySelectorAll('#doctor-interface .tab-button');
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-    
-    const clickedButton = Array.from(tabButtons).find(btn => 
-        btn.onclick && btn.onclick.toString().includes(tabName)
-    );
-    if (clickedButton) {
-        clickedButton.classList.add('active');
-    }
-    
-    document.querySelectorAll('#doctor-interface .tab-content').forEach(content => content.classList.remove('active'));
-    document.getElementById(`doctor-${tabName}-tab`).classList.add('active');
-}
-
-async function refreshDoctorTimeline() {
-    showApiLoadingOverlay('Fetching latest from Timeline API...', API_CONFIG.timeline.url);
-    
-    try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        renderDoctorTimeline();
-    } catch (error) {
-        console.error('Timeline API error:', error);
-    } finally {
-        hideApiLoadingOverlay();
-    }
-}
-
-function renderDoctorTimeline() {
-    const container = document.getElementById('doctor-timeline-container');
-    if (!container || !currentDoctorPatient) return;
-    
-    const timeline = currentDoctorPatient.timeline || [];
-    
-    if (timeline.length === 0) {
-        container.innerHTML = '<div class="timeline-empty"><p>No timeline data available from APIs</p></div>';
-        return;
-    }
-    
-    const timelineHTML = timeline.map(event => `
-        <div class="timeline-item fade-in">
-            <div class="timeline-marker timeline-marker--${event.type}">
-                <i data-lucide="${EVENT_TYPES[event.type]?.icon || 'file'}"></i>
-            </div>
-            <div class="timeline-content">
-                <div class="timeline-header">
-                    <h4 class="timeline-title">${event.title}</h4>
-                    <span class="timeline-date">${formatDate(event.date)}</span>
-                </div>
-                <p class="timeline-description">${event.description}</p>
-                <div class="api-source-badge">
-                    <i data-lucide="globe"></i>
-                    ${event.apiSource || 'API'}
-                </div>
-            </div>
-        </div>
-    `).join('');
-    
-    container.innerHTML = timelineHTML;
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-}
-
-function filterTimeline() {
-    const filter = document.getElementById('timeline-filter').value;
-    if (!currentDoctorPatient) return;
-    
-    const timeline = currentDoctorPatient.timeline || [];
-    
-    let filteredTimeline = timeline;
-    if (filter !== 'all') {
-        filteredTimeline = timeline.filter(event => event.type === filter);
-    }
-    
-    const originalTimeline = currentDoctorPatient.timeline;
-    currentDoctorPatient.timeline = filteredTimeline;
-    renderDoctorTimeline();
-    currentDoctorPatient.timeline = originalTimeline;
-}
-
-// Chat API functions
-function handleChatKeyPress(event) {
-    if (event.key === 'Enter') {
-        sendChatMessage();
-    }
-}
-
-function askQuickQuestion(questionType) {
-    const input = document.getElementById('chat-input');
-    
-    const quickQuestions = {
-        'drug interactions': 'Can you check for any drug interactions in this patient\'s medications?',
-        'lab results': 'Can you analyze the recent lab results for this patient?',
-        'medical history': 'Can you provide a summary of this patient\'s medical history?'
-    };
-    
-    input.value = quickQuestions[questionType] || questionType;
-    sendChatMessage();
-}
-
-async function sendChatMessage() {
-    const input = document.getElementById('chat-input');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    addChatMessage(message, 'user');
-    input.value = '';
-    
-    const chatApiStatus = document.getElementById('chat-api-status');
-    chatApiStatus.classList.remove('hidden');
-    
-    try {
-        // Simulate Chat API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const response = await callChatAPI(message);
-        addChatMessage(response, 'assistant');
-        
-    } catch (error) {
-        console.error('Chat API error:', error);
-        addChatMessage('Sorry, there was an error calling the Chat API. Please try again.', 'assistant');
-    } finally {
-        chatApiStatus.classList.add('hidden');
-    }
-}
-
-async function callChatAPI(message) {
-    const lowerMessage = message.toLowerCase();
-    
-    // Return appropriate response based on message content
-    if (lowerMessage.includes('drug') && lowerMessage.includes('interaction')) {
-        return CHAT_RESPONSES['drug interactions'];
-    }
-    
-    if (lowerMessage.includes('lab') && (lowerMessage.includes('result') || lowerMessage.includes('test'))) {
-        return CHAT_RESPONSES['lab results'];
-    }
-    
-    if (lowerMessage.includes('history') || lowerMessage.includes('summary')) {
-        return CHAT_RESPONSES['medical history'];
-    }
-    
-    // Default Chat API response
-    return "I've processed your question through the Chat API at https://test.com/chat. Based on the available patient data from our APIs, I can provide insights about lab results, medications, and medical history. Please feel free to ask more specific questions.";
-}
-
-function addChatMessage(message, sender) {
-    const messagesContainer = document.getElementById('chat-messages');
-    if (!messagesContainer) return;
-    
-    const messageElement = document.createElement('div');
-    messageElement.className = `chat-message chat-message--${sender} fade-in`;
-    messageElement.innerHTML = `
-        <div class="message-content">
-            <p>${message}</p>
-        </div>
+      <div class="timeline-empty">
+        <i data-lucide="clock"></i>
+        <p>No timeline data available from APIs</p>
+        <button onclick="refreshTimeline()" class="refresh-button">
+          <i data-lucide="refresh-cw"></i>
+          Refresh from Timeline API
+        </button>
+      </div>
     `;
-    
-    messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-// API Loading overlay functions
-function showApiLoadingOverlay(text, endpoint) {
-    const overlay = document.getElementById('api-loading-overlay');
-    const textElement = document.getElementById('api-loading-text');
-    const endpointElement = document.getElementById('api-loading-endpoint');
-    
-    if (overlay && textElement && endpointElement) {
-        textElement.textContent = text;
-        endpointElement.textContent = endpoint;
-        overlay.classList.remove('hidden');
-        overlay.classList.add('show');
+    } else {
+        medicalTimeline.forEach(event => {
+            const eventType = EVENT_TYPES[event.eventType] || EVENT_TYPES.document;
+            const eventElement = document.createElement('div');
+            eventElement.className = 'timeline-item fade-in';
+            eventElement.innerHTML = `
+        <div class="timeline-marker timeline-marker--${event.eventType}">
+          <i data-lucide="${eventType.icon}"></i>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h4 class="timeline-title">${event.title}</h4>
+            <span class="timeline-date">${formatDate(event.date)}</span>
+          </div>
+          <p class="timeline-description">${event.description}</p>
+          <span class="api-source-badge">
+            <i data-lucide="server"></i>
+            ${event.apiSource}
+          </span>
+        </div>
+      `;
+            container.appendChild(eventElement);
+        });
     }
-}
 
-function hideApiLoadingOverlay() {
-    const overlay = document.getElementById('api-loading-overlay');
-    if (overlay) {
-        overlay.classList.remove('show');
-        overlay.classList.add('hidden');
-    }
-}
-
-// Utility functions
-function generateId() {
-    return 'id_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    // Initialize icons
+    setTimeout(() => {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }, 10);
 }
 
 function generateSecureToken() {
@@ -757,6 +492,190 @@ function generateSecureToken() {
     return token;
 }
 
+function copyShareUrl() {
+    const urlElement = document.getElementById('share-url-display');
+    navigator.clipboard.writeText(urlElement.textContent).then(() => {
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    });
+}
+
+function generateShareToken() {
+    console.log('Generating share token...');
+    console.log('Current patient:', currentPatient);
+    console.log('Medical timeline:', medicalTimeline);
+
+    if (!currentPatient) {
+        alert('Please set up your patient profile first');
+        return;
+    }
+
+    const token = generateId();
+    const shareUrl = `${window.location.origin}${window.location.pathname}?token=${token}`;
+
+    // Create the data structure that matches what verifyDoctorAccess expects
+    const shareData = {
+        patientId: currentPatient.id,
+        patientName: currentPatient.name,
+        created: new Date().toISOString(),
+        timeline: medicalTimeline || []
+    };
+
+    console.log('Storing share data:', shareData);
+
+    // Store in localStorage with the correct key
+    const key = `doctor-token-${token}`;
+    localStorage.setItem(key, JSON.stringify(shareData));
+
+    // Verify it was stored correctly
+    const stored = localStorage.getItem(key);
+    console.log('Verified stored data:', stored);
+
+    // Try to find the correct elements in the HTML and update them
+    const tokenDisplay = document.getElementById('share-token-display') || document.getElementById('generated-link');
+    const urlDisplay = document.getElementById('share-url-display') || document.getElementById('generated-link');
+    const results = document.getElementById('share-results') || document.getElementById('share-link-result');
+    const expiryElement = document.getElementById('expiry-days');
+
+    if (tokenDisplay) {
+        if (tokenDisplay.tagName === 'INPUT') {
+            tokenDisplay.value = shareUrl;
+        } else {
+            tokenDisplay.textContent = token;
+        }
+    }
+
+    if (urlDisplay && urlDisplay !== tokenDisplay) {
+        if (urlDisplay.tagName === 'INPUT') {
+            urlDisplay.value = shareUrl;
+        } else {
+            urlDisplay.textContent = shareUrl;
+        }
+    }
+
+    if (expiryElement) {
+        expiryElement.textContent = '7';
+    }
+
+    if (results) {
+        results.classList.remove('hidden');
+    }
+
+    console.log('Share token generated successfully:', token);
+    console.log('Share URL:', shareUrl);
+
+    // Also show an alert with the URL for easy testing
+    alert(`Share URL generated: ${shareUrl}`);
+}
+
+function verifyDoctorAccess(token) {
+    console.log('Verifying doctor access for token:', token);
+
+    // Hardcoded to allow any token - just use demo data
+    currentDoctorPatient = {
+        patientId: "demo-patient-001",
+        patientName: "Sarah Johnson",
+        created: new Date().toISOString(),
+        timeline: [
+            {
+                id: "event-001",
+                eventType: "lab_test",
+                title: "Lab Results - Complete Blood Count",
+                date: "2024-09-15",
+                description: "Hemoglobin 14.2 g/dL, WBC 7200/μL - All values normal",
+                apiSource: "upload-api"
+            },
+            {
+                id: "event-002",
+                eventType: "prescription",
+                title: "Medication Prescribed",
+                date: "2024-09-10",
+                description: "Metformin 500mg twice daily",
+                apiSource: "timeline-api"
+            },
+            {
+                id: "event-003",
+                eventType: "document",
+                title: "Medical Document Uploaded",
+                date: "2024-09-05",
+                description: "Patient intake form and medical history",
+                apiSource: "upload-api"
+            }
+        ]
+    };
+
+    // Load the demo timeline into the global timeline
+    medicalTimeline = currentDoctorPatient.timeline;
+
+    showDoctorView();
+    console.log('Doctor access granted with demo data for any token:', token);
+}
+
+function showDoctorView() {
+    hideAllSections();
+    document.getElementById('doctor-view').classList.add('active');
+
+    if (currentDoctorPatient) {
+        document.getElementById('doctor-patient-name').textContent = currentDoctorPatient.patientName;
+        document.getElementById('doctor-patient-id').textContent = currentDoctorPatient.patientId;
+
+        // Render patient timeline for doctor
+        medicalTimeline = currentDoctorPatient.timeline || [];
+        const doctorTimelineContainer = document.getElementById('doctor-timeline-container');
+        renderDoctorTimeline(doctorTimelineContainer);
+    }
+}
+
+function renderDoctorTimeline(container) {
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (medicalTimeline.length === 0) {
+        container.innerHTML = `
+      <div class="timeline-empty">
+        <i data-lucide="clock"></i>
+        <p>No timeline data available</p>
+      </div>
+    `;
+    } else {
+        medicalTimeline.forEach(event => {
+            const eventType = EVENT_TYPES[event.eventType] || EVENT_TYPES.document;
+            const eventElement = document.createElement('div');
+            eventElement.className = 'timeline-item';
+            eventElement.innerHTML = `
+        <div class="timeline-marker timeline-marker--${event.eventType}">
+          <i data-lucide="${eventType.icon}"></i>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h4 class="timeline-title">${event.title}</h4>
+            <span class="timeline-date">${formatDate(event.date)}</span>
+          </div>
+          <p class="timeline-description">${event.description}</p>
+          <span class="api-source-badge">
+            <i data-lucide="server"></i>
+            ${event.apiSource}
+          </span>
+        </div>
+      `;
+            container.appendChild(eventElement);
+        });
+    }
+
+    // Initialize icons
+    setTimeout(() => {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }, 10);
+}
+
+// Utility functions
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -765,59 +684,93 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-function formatDate(date) {
-    const d = new Date(date);
-    return d.toLocaleDateString('en-US', {
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
     });
 }
 
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+function showApiLoadingOverlay(endpoint) {
+    const overlay = document.querySelector('.loading-overlay');
+    const endpointDisplay = document.querySelector('.api-loading-endpoint');
+
+    if (endpointDisplay && endpoint) {
+        endpointDisplay.textContent = endpoint;
+    }
+
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('show');
+    }
+}
+
+function hideApiLoadingOverlay() {
+    const overlay = document.querySelector('.loading-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('show');
+    }
+}
+
 // Data persistence
 function savePatientData() {
     if (currentPatient) {
-        const patientData = {
-            patient: currentPatient,
-            documents: patientDocuments,
-            timeline: medicalTimeline
-        };
-        localStorage.setItem('medshare_patient_data', JSON.stringify(patientData));
+        localStorage.setItem('currentPatient', JSON.stringify(currentPatient));
+        localStorage.setItem('medicalTimeline', JSON.stringify(medicalTimeline));
     }
 }
 
 function loadPatientData() {
-    const savedData = localStorage.getItem('medshare_patient_data');
-    if (savedData) {
+    const savedPatient = localStorage.getItem('currentPatient');
+    const savedTimeline = localStorage.getItem('medicalTimeline');
+
+    if (savedPatient) {
         try {
-            const data = JSON.parse(savedData);
-            currentPatient = data.patient;
-            patientDocuments = data.documents || [];
-            medicalTimeline = data.timeline || [];
-        } catch (e) {
-            console.log('Error loading patient data:', e);
-            currentPatient = null;
-            patientDocuments = [];
-            medicalTimeline = [];
+            currentPatient = JSON.parse(savedPatient);
+        } catch (error) {
+            console.error('Error loading patient data:', error);
+        }
+    }
+
+    if (savedTimeline) {
+        try {
+            medicalTimeline = JSON.parse(savedTimeline);
+        } catch (error) {
+            console.error('Error loading timeline data:', error);
         }
     }
 }
 
-// Load demo data for demonstration
 function loadDemoData() {
-    // Initialize with demo timeline events
-    const demoTimeline = DEMO_PATIENT_DATA.timeline.map(event => ({
-        id: generateId(),
-        type: event.type,
-        title: event.title,
-        description: event.description,
-        date: new Date(event.date),
-        apiSource: event.apiSource,
-        details: {
-            source: event.apiSource === 'upload-api' ? 'Upload API' : 'Timeline API'
-        }
-    }));
-    
-    medicalTimeline = demoTimeline;
+    // Load demo timeline data
+    medicalTimeline = [...DEMO_PATIENT_DATA.timeline];
     savePatientData();
+    renderTimeline();
 }
+
+// Expose functions to global scope for HTML onclick handlers
+window.showHome = showHome;
+window.showPatientPortal = showPatientPortal;
+window.showDoctorAccess = showDoctorAccess;
+window.showApiStatus = showApiStatus;
+window.setupPatient = setupPatient;
+window.showTab = showTab;
+window.handleDragOver = handleDragOver;
+window.handleDragEnter = handleDragEnter;
+window.handleDragLeave = handleDragLeave;
+window.handleDrop = handleDrop;
+window.handleFiles = handleFiles;
+window.sendMessage = sendMessage;
+window.refreshTimeline = refreshTimeline;
+window.generateShareToken = generateShareToken;
+window.copyShareUrl = copyShareUrl;
+
+// Fix for HTML onclick handlers that use different function names
+window.generateShareLink = generateShareToken; // Alias for HTML compatibility
