@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediShare - AI-Powered Healthcare Data Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container flex items-center justify-between">
+            <div class="logo">
+                <h2>MediShare</h2>
+                <span class="logo-tagline">AI-Powered Healthcare Platform</span>
+            </div>
+            <nav class="nav">
+                <button class="btn btn--outline" onclick="showHome()">Home</button>
+                <button class="btn btn--secondary" onclick="showPatientPortal()">Patient Portal</button>
+                <button class="btn btn--outline" onclick="showApiConfig()">
+                    <i data-lucide="settings"></i>
+                    API Config
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- API Configuration Modal -->
+    <div id="api-config-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>API Configuration</h3>
+                <button class="btn btn--outline btn--sm" onclick="closeApiConfig()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="config-section">
+                    <h4><i data-lucide="brain"></i> Llama AI Configuration</h4>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" id="llama-api-key" class="form-control" placeholder="Enter your Llama API key">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <select id="llama-model" class="form-control">
+                            <option value="llama-2-70b-chat">Llama 2 70B Chat</option>
+                            <option value="llama-2-13b-chat">Llama 2 13B Chat</option>
+                            <option value="llama-2-7b-chat">Llama 2 7B Chat</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h4><i data-lucide="database"></i> Snowflake Configuration</h4>
+                    <div class="form-group">
+                        <label class="form-label">Account URL</label>
+                        <input type="text" id="snowflake-account" class="form-control" placeholder="https://your-account.snowflakecomputing.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="snowflake-username" class="form-control" placeholder="Your Snowflake username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="snowflake-password" class="form-control" placeholder="Your Snowflake password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Database</label>
+                        <input type="text" id="snowflake-database" class="form-control" placeholder="MEDISHARE_DB">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h4><i data-lucide="users"></i> CrewAI Configuration</h4>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" id="crewai-api-key" class="form-control" placeholder="Enter your CrewAI API key">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Endpoint</label>
+                        <input type="text" id="crewai-endpoint" class="form-control" placeholder="https://api.crewai.com/v1">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h4><i data-lucide="image"></i> LandingAI Configuration</h4>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" id="landingai-api-key" class="form-control" placeholder="Enter your LandingAI API key">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn--primary btn--full-width" onclick="saveApiConfig()">
+                        <i data-lucide="save"></i>
+                        Save Configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home/Landing Page -->
+    <section id="home" class="section active">
+        <div class="hero">
+            <div class="container">
+                <div class="hero__content">
+                    <h1 class="hero__title">AI-Powered Healthcare Data Sharing Platform</h1>
+                    <p class="hero__description">
+                        MediShare leverages cutting-edge AI technologies including Llama AI, CrewAI agents, and Snowflake data warehouse 
+                        to provide secure, intelligent medical document processing and sharing between patients and healthcare providers.
+                    </p>
+                    <div class="hero__actions">
+                        <button class="btn btn--primary btn--lg" onclick="showPatientPortal()">
+                            <i data-lucide="user"></i>
+                            I'm a Patient
+                        </button>
+                        <button class="btn btn--outline btn--lg" onclick="showDoctorAccess()">
+                            <i data-lucide="stethoscope"></i>
+                            I'm a Doctor
+                        </button>
+                    </div>
+                    
+                    <div class="tech-stack">
+                        <div class="tech-item">
+                            <i data-lucide="brain"></i>
+                            <span>Llama AI</span>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="users"></i>
+                            <span>CrewAI</span>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="database"></i>
+                            <span>Snowflake</span>
+                        </div>
+                        <div class="tech-item">
+                            <i data-lucide="image"></i>
+                            <span>LandingAI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <div class="container">
+                <h2 class="section__title">Platform Architecture</h2>
+                <div class="features__grid">
+                    <div class="feature">
+                        <div class="feature__icon">
+                            <i data-lucide="brain"></i>
+                        </div>
+                        <h3>Llama AI Processing</h3>
+                        <p>Advanced language model for medical document analysis, timeline generation, and intelligent chat responses</p>
+                        <div class="feature-status" id="llama-status">
+                            <span class="status status--error">Not Configured</span>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature__icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3>CrewAI Orchestration</h3>
+                        <p>Multi-agent system coordinating document processing, data extraction, and workflow automation</p>
+                        <div class="feature-status" id="crewai-status">
+                            <span class="status status--error">Not Configured</span>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature__icon">
+                            <i data-lucide="database"></i>
+                        </div>
+                        <h3>Snowflake Storage</h3>
+                        <p>Secure, scalable data warehouse for storing patient information, documents, and analytics</p>
+                        <div class="feature-status" id="snowflake-status">
+                            <span class="status status--error">Not Configured</span>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature__icon">
+                            <i data-lucide="image"></i>
+                        </div>
+                        <h3>LandingAI Vision</h3>
+                        <p>Computer vision for analyzing medical images, extracting text from documents, and data validation</p>
+                        <div class="feature-status" id="landingai-status">
+                            <span class="status status--error">Not Configured</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="architecture-flow">
+                    <h3>Data Processing Pipeline</h3>
+                    <div class="pipeline">
+                        <div class="pipeline-step">
+                            <i data-lucide="upload"></i>
+                            <span>Document Upload</span>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <i data-lucide="image"></i>
+                            <span>LandingAI OCR</span>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <i data-lucide="users"></i>
+                            <span>CrewAI Agents</span>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <i data-lucide="brain"></i>
+                            <span>Llama Analysis</span>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <i data-lucide="database"></i>
+                            <span>Snowflake Storage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patient Portal -->
+    <section id="patient-portal" class="section">
+        <div class="container">
+            <div class="portal-header">
+                <h1>Patient Portal</h1>
+                <p id="patient-name-display" class="patient-info">Welcome to MediShare AI Platform</p>
+                <div class="ai-status-bar">
+                    <div class="status-item">
+                        <i data-lucide="brain"></i>
+                        <span>Llama AI: </span>
+                        <span id="patient-llama-status" class="status-indicator">Offline</span>
+                    </div>
+                    <div class="status-item">
+                        <i data-lucide="database"></i>
+                        <span>Snowflake: </span>
+                        <span id="patient-snowflake-status" class="status-indicator">Offline</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Profile Setup -->
+            <div id="patient-setup" class="card setup-card">
+                <div class="card__body">
+                    <h3>Create Your Profile</h3>
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" id="patient-name-input" class="form-control" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" id="patient-dob" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Medical Record Number (Optional)</label>
+                        <input type="text" id="patient-mrn" class="form-control" placeholder="Enter your MRN">
+                    </div>
+                    <button class="btn btn--primary" onclick="setupPatient()">
+                        <i data-lucide="user-plus"></i>
+                        Create Profile & Continue
+                    </button>
+                </div>
+            </div>
+
+            <!-- Portal Tabs -->
+            <div id="patient-tabs" class="tabs hidden">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('upload')">
+                        <i data-lucide="upload"></i>
+                        Upload Documents
+                    </button>
+                    <button class="tab-button" onclick="showTab('timeline')">
+                        <i data-lucide="timeline"></i>
+                        AI Timeline
+                    </button>
+                    <button class="tab-button" onclick="showTab('agents')">
+                        <i data-lucide="users"></i>
+                        AI Agents
+                    </button>
+                    <button class="tab-button" onclick="showTab('share')">
+                        <i data-lucide="share"></i>
+                        Secure Share
+                    </button>
+                </div>
+
+                <!-- Upload Tab -->
+                <div id="upload-tab" class="tab-content active">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Upload Medical Documents</h3>
+                            <p class="upload-description">
+                                Our AI pipeline will process your documents using LandingAI for text extraction, 
+                                CrewAI agents for data organization, and Llama AI for medical analysis.
+                            </p>
+                            <div class="upload-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragenter="handleDragEnter(event)" ondragleave="handleDragLeave(event)">
+                                <div class="upload-content">
+                                    <i data-lucide="upload" class="upload-icon"></i>
+                                    <p class="upload-text">Drag and drop your files here or <button class="upload-button" onclick="document.getElementById('file-input').click()">browse</button></p>
+                                    <p class="upload-subtext">Supports PDF, images, and document files • Processed with AI</p>
+                                </div>
+                                <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFiles(this.files)" class="hidden">
+                            </div>
+                            <div id="uploaded-files" class="uploaded-files"></div>
+                            <div id="processing-pipeline" class="processing-pipeline hidden">
+                                <h4>AI Processing Pipeline</h4>
+                                <div class="pipeline-status">
+                                    <div class="pipeline-step-status" id="step-landingai">
+                                        <i data-lucide="image"></i>
+                                        <span>LandingAI OCR</span>
+                                        <div class="step-indicator">
+                                            <div class="spinner"></div>
+                                        </div>
+                                    </div>
+                                    <div class="pipeline-step-status" id="step-crewai">
+                                        <i data-lucide="users"></i>
+                                        <span>CrewAI Processing</span>
+                                        <div class="step-indicator">⏳</div>
+                                    </div>
+                                    <div class="pipeline-step-status" id="step-llama">
+                                        <i data-lucide="brain"></i>
+                                        <span>Llama Analysis</span>
+                                        <div class="step-indicator">⏳</div>
+                                    </div>
+                                    <div class="pipeline-step-status" id="step-snowflake">
+                                        <i data-lucide="database"></i>
+                                        <span>Snowflake Storage</span>
+                                        <div class="step-indicator">⏳</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Tab -->
+                <div id="timeline-tab" class="tab-content">
+                    <div class="card">
+                        <div class="card__body">
+                            <div class="timeline-header-controls">
+                                <h3>Your AI-Generated Medical Timeline</h3>
+                                <div class="timeline-controls">
+                                    <button class="btn btn--outline btn--sm" onclick="regenerateTimeline()">
+                                        <i data-lucide="refresh-cw"></i>
+                                        Regenerate with Llama AI
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="timeline-container" class="timeline-container">
+                                <div class="timeline-empty">
+                                    <i data-lucide="calendar"></i>
+                                    <p>Upload documents to generate your AI-powered medical timeline</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Agents Tab -->
+                <div id="agents-tab" class="tab-content">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>CrewAI Agent Activity</h3>
+                            <div class="agents-container">
+                                <div class="agent-card">
+                                    <div class="agent-header">
+                                        <i data-lucide="file-text"></i>
+                                        <h4>Document Parser Agent</h4>
+                                        <span class="agent-status" id="parser-agent-status">Idle</span>
+                                    </div>
+                                    <p>Specializes in extracting structured data from medical documents using LandingAI OCR results.</p>
+                                    <div class="agent-activity" id="parser-agent-activity"></div>
+                                </div>
+                                
+                                <div class="agent-card">
+                                    <div class="agent-header">
+                                        <i data-lucide="brain"></i>
+                                        <h4>Medical Analysis Agent</h4>
+                                        <span class="agent-status" id="medical-agent-status">Idle</span>
+                                    </div>
+                                    <p>Works with Llama AI to analyze medical content and generate timeline events.</p>
+                                    <div class="agent-activity" id="medical-agent-activity"></div>
+                                </div>
+                                
+                                <div class="agent-card">
+                                    <div class="agent-header">
+                                        <i data-lucide="database"></i>
+                                        <h4>Data Storage Agent</h4>
+                                        <span class="agent-status" id="storage-agent-status">Idle</span>
+                                    </div>
+                                    <p>Manages secure data storage and retrieval operations with Snowflake.</p>
+                                    <div class="agent-activity" id="storage-agent-activity"></div>
+                                </div>
+                                
+                                <div class="agent-card">
+                                    <div class="agent-header">
+                                        <i data-lucide="shield-check"></i>
+                                        <h4>Privacy Guardian Agent</h4>
+                                        <span class="agent-status" id="privacy-agent-status">Idle</span>
+                                    </div>
+                                    <p>Ensures HIPAA compliance and manages access controls for shared data.</p>
+                                    <div class="agent-activity" id="privacy-agent-activity"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Tab -->
+                <div id="share-tab" class="tab-content">
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Secure Healthcare Provider Sharing</h3>
+                            <div class="share-options">
+                                <div class="form-group">
+                                    <label class="form-label">Healthcare Provider Email</label>
+                                    <input type="email" id="provider-email" class="form-control" placeholder="doctor@hospital.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Access Duration</label>
+                                    <select id="access-duration" class="form-control">
+                                        <option value="7">7 days</option>
+                                        <option value="14">14 days</option>
+                                        <option value="30">30 days</option>
+                                        <option value="90">90 days</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Data Permissions</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Full Timeline Access
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> AI Analysis Results
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" checked> Original Documents
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox"> Lab Values Trending
+                                        </label>
+                                    </div>
+                                </div>
+                                <button class="btn btn--primary btn--full-width" onclick="generateSecureShareLink()" id="generate-link-btn">
+                                    <i data-lucide="link"></i>
+                                    Generate HIPAA-Compliant Link
+                                </button>
+                                <div id="share-link-result" class="share-result hidden">
+                                    <div class="link-container">
+                                        <input type="text" id="generated-link" class="form-control" readonly>
+                                        <button class="btn btn--secondary" onclick="copyLink()">
+                                            <i data-lucide="copy"></i>
+                                            Copy
+                                        </button>
+                                    </div>
+                                    <p class="share-instructions">
+                                        Secure link generated with Snowflake encryption. 
+                                        The link will expire in <span id="expiry-days">7</span> days.
+                                        All access is logged for HIPAA compliance.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctor Access Portal -->
+    <section id="doctor-access" class="section">
+        <div class="container">
+            <h1>Healthcare Provider Access</h1>
+            <div class="card">
+                <div class="card__body">
+                    <h3>Enter Patient Access Token</h3>
+                    <p class="access-description">
+                        Access patient data securely through our Snowflake-encrypted sharing system with Llama AI assistance.
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label">Access Token</label>
+                        <input type="text" id="access-token-input" class="form-control" placeholder="Enter the secure access token from your patient">
+                    </div>
+                    <button class="btn btn--primary" onclick="verifyAccess()">
+                        <i data-lucide="key"></i>
+                        Access Patient Data
+                    </button>
+                    <div id="access-error" class="status status--error hidden">
+                        Invalid or expired access token
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctor Interface -->
+    <section id="doctor-interface" class="section">
+        <div class="container">
+            <div class="doctor-header">
+                <h1>Patient Medical Overview</h1>
+                <div class="patient-info-card">
+                    <p id="doctor-patient-name">Patient: John Doe</p>
+                    <span class="status status--success">Snowflake Verified</span>
+                </div>
+            </div>
+
+            <div class="doctor-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showDoctorTab('timeline')">
+                        <i data-lucide="timeline"></i>
+                        AI Timeline
+                    </button>
+                    <button class="tab-button" onclick="showDoctorTab('chat')">
+                        <i data-lucide="message-circle"></i>
+                        Llama Assistant
+                    </button>
+                    <button class="tab-button" onclick="showDoctorTab('analytics')">
+                        <i data-lucide="bar-chart"></i>
+                        Analytics
+                    </button>
+                </div>
+
+                <!-- Doctor Timeline Tab -->
+                <div id="doctor-timeline-tab" class="tab-content active">
+                    <div class="timeline-filters">
+                        <div class="filter-group">
+                            <label class="form-label">Filter by Type</label>
+                            <select id="timeline-filter" class="form-control" onchange="filterTimeline()">
+                                <option value="all">All Events</option>
+                                <option value="lab_test">Lab Tests</option>
+                                <option value="imaging">Imaging</option>
+                                <option value="prescription">Prescriptions</option>
+                                <option value="document">Documents</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn btn--outline" onclick="exportToSnowflake()">
+                                <i data-lucide="database"></i>
+                                Export to Snowflake
+                            </button>
+                        </div>
+                    </div>
+                    <div id="doctor-timeline-container" class="timeline-container"></div>
+                </div>
+
+                <!-- Doctor Chat Tab -->
+                <div id="doctor-chat-tab" class="tab-content">
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <h3>Llama AI Medical Assistant</h3>
+                            <div class="chat-status">
+                                <span class="status status--info">Llama AI Active</span>
+                                <span class="status status--success">Snowflake Connected</span>
+                            </div>
+                        </div>
+                        <div id="chat-messages" class="chat-messages">
+                            <div class="chat-message chat-message--assistant">
+                                <div class="message-content">
+                                    <p>Hello! I'm your Llama AI medical assistant. I have access to this patient's complete medical timeline stored in Snowflake. I can help you analyze lab results, medications, medical history, and provide clinical insights. How can I assist you today?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <div class="chat-quick-questions">
+                                <button class="quick-question-btn" onclick="askQuickQuestion('drug interactions')">
+                                    Check drug interactions
+                                </button>
+                                <button class="quick-question-btn" onclick="askQuickQuestion('lab trends')">
+                                    Analyze lab trends
+                                </button>
+                                <button class="quick-question-btn" onclick="askQuickQuestion('risk assessment')">
+                                    Risk assessment
+                                </button>
+                                <button class="quick-question-btn" onclick="askQuickQuestion('treatment recommendations')">
+                                    Treatment recommendations
+                                </button>
+                            </div>
+                            <div class="chat-input-row">
+                                <input type="text" id="chat-input" class="form-control" placeholder="Ask Llama AI about the patient's medical data..." onkeypress="handleChatKeyPress(event)">
+                                <button class="btn btn--primary" onclick="sendChatMessage()">
+                                    <i data-lucide="send"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div id="doctor-analytics-tab" class="tab-content">
+                    <div class="analytics-container">
+                        <h3>Snowflake Analytics Dashboard</h3>
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h4>Patient Data Overview</h4>
+                                <div class="metric">
+                                    <span class="metric-value">127</span>
+                                    <span class="metric-label">Total Records in Snowflake</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">15</span>
+                                    <span class="metric-label">AI-Processed Documents</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">8</span>
+                                    <span class="metric-label">Timeline Events</span>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-card">
+                                <h4>AI Processing Stats</h4>
+                                <div class="metric">
+                                    <span class="metric-value">98.5%</span>
+                                    <span class="metric-label">LandingAI OCR Accuracy</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">4.2s</span>
+                                    <span class="metric-label">Avg Llama Response Time</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-value">12</span>
+                                    <span class="metric-label">CrewAI Agents Deployed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner large"></div>
+            <p>Processing with AI Pipeline...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
