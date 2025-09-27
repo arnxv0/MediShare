@@ -627,6 +627,63 @@ function verifyDoctorAccess(token) {
     console.log('Doctor access granted with demo data for any token:', token);
 }
 
+// Doctor chat message function
+async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message to chat
+    addChatMessage('user', message);
+    input.value = '';
+    
+    // Show thinking state
+    showChatThinking(true);
+    
+    try {
+        const response = await fetch(API_CONFIG.chat.url, {
+            method: 'POST',
+            headers: {
+                ...authHeaders(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                patientId: currentDoctorPatient?.patientId || 'unknown',
+                timeline: medicalTimeline
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Chat API failed: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        const reply = result.response || result.reply || result.answer || 'No response from Chat API';
+        
+        // Add AI response to chat
+        addChatMessage('assistant', reply);
+        
+    } catch (error) {
+        console.error('Chat API error:', error);
+        
+        // Fallback to template responses
+        const fallbackResponse = findChatResponse(message) || 
+            "I'm sorry, I'm having trouble connecting to the Chat API right now. Please try again later.";
+        addChatMessage('assistant', fallbackResponse);
+    } finally {
+        showChatThinking(false);
+    }
+}
+
+// Handle Enter key in chat input
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
 function showDoctorView() {
     hideAllSections();
     document.getElementById('doctor-view').classList.add('active');
@@ -760,6 +817,40 @@ function loadPatientData() {
     }
 }
 
+// Doctor tab navigation function
+function showDoctorTab(tabName) {
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.doctor-tabs .tab-button');
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Add active class to clicked button
+    const clickedButton = Array.from(tabButtons).find(btn => 
+        btn.onclick.toString().includes(tabName)
+    );
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
+    
+    // Hide all tab contents
+    document.querySelectorAll('.doctor-tabs .tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    const targetTab = document.getElementById(`doctor-${tabName}-tab`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    
+    // Special handling for timeline tab
+    if (tabName === 'timeline') {
+        const doctorTimelineContainer = document.getElementById('doctor-timeline-container');
+        if (doctorTimelineContainer && medicalTimeline.length > 0) {
+            renderDoctorTimeline(doctorTimelineContainer);
+        }
+    }
+}
+
 function loadDemoData() {
     // Load demo timeline data
     medicalTimeline = [...DEMO_PATIENT_DATA.timeline];
@@ -786,3 +877,6 @@ window.copyShareUrl = copyShareUrl;
 
 // Fix for HTML onclick handlers that use different function names
 window.generateShareLink = generateShareToken; // Alias for HTML compatibility
+window.showDoctorTab = showDoctorTab;
+window.sendChatMessage = sendChatMessage;
+window.handleChatKeyPress = handleChatKeyPress;
