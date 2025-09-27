@@ -49,7 +49,7 @@ const DEMO_PATIENT_DATA = {
             date: "2024-09-15",
             type: "lab_test",
             title: "Lab Results - Complete Blood Count",
-            description: "Hemoglobin 14.2 g/dL, WBC 7200/μL - All values normal",
+            description: "Hemoglobin 14.2 g/dL, WBC 7200/Î¼L - All values normal",
             apiSource: "upload-api"
         },
         {
@@ -279,45 +279,22 @@ async function callUploadAPI(file, fileItem) {
     try {
         showApiLoadingOverlay(API_CONFIG.upload.url);
 
-        const formData = new FormData();
-        formData.append('file', file);
+        // mock delay for demo purposes
+        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
-        const response = await fetch(API_CONFIG.upload.url, {
-            method: 'POST',
-            headers: authHeaders(),
-            body: formData
-        });
+        // mock response for demo purposes
+        const mockResponse = {
+            event: {
+                id: generateId(),
+                eventType: 'document',
+                title: `Uploaded: ${file.name}`,
+                date: new Date().toISOString().slice(0, 10),
+                description: `Document ${file.name} uploaded and processed.`,
+                apiSource: 'upload-api'
+            }
+        };
 
-        if (!response.ok) {
-            throw new Error(`Upload failed: ${response.status}`);
-        }
 
-        const result = await response.json();
-
-        // Update file status
-        const statusElement = fileItem.querySelector('.file-status');
-        if (statusElement) {
-            statusElement.textContent = 'Processed via Upload API';
-        }
-
-        // Process timeline events from response
-        if (result.timeline && Array.isArray(result.timeline)) {
-            result.timeline.forEach(event => {
-                const timelineEvent = {
-                    id: event.id || generateId(),
-                    eventType: event.eventType || event.type || 'document',
-                    title: event.title || 'Document Processed',
-                    date: event.date || new Date().toISOString().slice(0, 10),
-                    description: event.description || '',
-                    apiSource: 'upload-api'
-                };
-                medicalTimeline.push(timelineEvent);
-            });
-
-            // Sort timeline by date (newest first)
-            medicalTimeline.sort((a, b) => new Date(b.date) - new Date(a.date));
-            renderTimeline();
-        }
 
     } catch (error) {
         console.error('Upload API error:', error);
@@ -598,7 +575,7 @@ function verifyDoctorAccess(token) {
                 eventType: "lab_test",
                 title: "Lab Results - Complete Blood Count",
                 date: "2024-09-15",
-                description: "Hemoglobin 14.2 g/dL, WBC 7200/μL - All values normal",
+                description: "Hemoglobin 14.2 g/dL, WBC 7200/Î¼L - All values normal",
                 apiSource: "upload-api"
             },
             {
