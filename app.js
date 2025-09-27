@@ -38,7 +38,7 @@ function authHeaders(extra = {}) {
 
 // Demo patient data from provided JSON
 const DEMO_PATIENT_DATA = {
-    name: "Sarah Johnson",
+    name: "Arnav",
     id: "patient-simplified-001",
     documents: [
         { name: "Lab_Results.pdf", type: "lab_test", processed: true }
@@ -631,16 +631,16 @@ function verifyDoctorAccess(token) {
 async function sendChatMessage() {
     const input = document.getElementById('chat-input');
     const message = input.value.trim();
-    
+
     if (!message) return;
-    
+
     // Add user message to chat
     addChatMessage('user', message);
     input.value = '';
-    
+
     // Show thinking state
     showChatThinking(true);
-    
+
     try {
         const response = await fetch(API_CONFIG.chat.url, {
             method: 'POST',
@@ -654,22 +654,22 @@ async function sendChatMessage() {
                 timeline: medicalTimeline
             })
         });
-        
+
         if (!response.ok) {
             throw new Error(`Chat API failed: ${response.status}`);
         }
-        
+
         const result = await response.json();
         const reply = result.response || result.reply || result.answer || 'No response from Chat API';
-        
+
         // Add AI response to chat
         addChatMessage('assistant', reply);
-        
+
     } catch (error) {
         console.error('Chat API error:', error);
-        
+
         // Fallback to template responses
-        const fallbackResponse = findChatResponse(message) || 
+        const fallbackResponse = findChatResponse(message) ||
             "I'm sorry, I'm having trouble connecting to the Chat API right now. Please try again later.";
         addChatMessage('assistant', fallbackResponse);
     } finally {
@@ -822,26 +822,26 @@ function showDoctorTab(tabName) {
     // Remove active class from all tab buttons
     const tabButtons = document.querySelectorAll('.doctor-tabs .tab-button');
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    
+
     // Add active class to clicked button
-    const clickedButton = Array.from(tabButtons).find(btn => 
+    const clickedButton = Array.from(tabButtons).find(btn =>
         btn.onclick.toString().includes(tabName)
     );
     if (clickedButton) {
         clickedButton.classList.add('active');
     }
-    
+
     // Hide all tab contents
     document.querySelectorAll('.doctor-tabs .tab-content').forEach(content => {
         content.classList.remove('active');
     });
-    
+
     // Show selected tab content
     const targetTab = document.getElementById(`doctor-${tabName}-tab`);
     if (targetTab) {
         targetTab.classList.add('active');
     }
-    
+
     // Special handling for timeline tab
     if (tabName === 'timeline') {
         const doctorTimelineContainer = document.getElementById('doctor-timeline-container');
