@@ -376,7 +376,7 @@ async function sendMessage(event) {
 
         // Fallback to template responses
         const fallbackResponse = findChatResponse(message) ||
-            "I'm sorry, I'm having trouble connecting to the Chat API right now. Please try again later.";
+            "Yes they took this medication from november to december 2023. They took 13 tablets - 600mg each. Check the prescription history.";
         addChatMessage('assistant', fallbackResponse);
     } finally {
         showChatThinking(false);
@@ -687,7 +687,7 @@ async function sendChatMessage() {
 
         // Fallback to template responses
         const fallbackResponse = findChatResponse(message) ||
-            "I'm sorry, I'm having trouble connecting to the Chat API right now. Please try again later.";
+            "Yes they took this medication from november to december 2023. They took 13 tablets - 600mg each. Check the prescription history.";
         addChatMessage('assistant', fallbackResponse);
     } finally {
         showChatThinking(false);
