@@ -59,6 +59,30 @@ const DEMO_PATIENT_DATA = {
             title: "Medication Prescribed",
             description: "Metformin 500mg twice daily",
             apiSource: "timeline-api"
+        },
+        {
+            id: "event-003",
+            date: "2024-09-05",
+            type: "document",
+            title: "Medical Document Uploaded",
+            description: "Patient intake form and medical history",
+            apiSource: "upload-api"
+        },
+        {
+            id: "event-004",
+            date: "2024-08-20",
+            type: "lab_test",
+            title: "Lab Results - Metabolic Panel",
+            description: "Glucose 110 mg/dL, Creatinine 0.9 mg/dL - Slightly elevated glucose",
+            apiSource: "timeline-api"
+        },
+        {
+            id: "event-005",
+            date: "2024-08-15",
+            type: "prescription",
+            title: "Medication Prescribed",
+            description: "Atorvastatin 20mg once daily",
+            apiSource: "upload-api"
         }
     ]
 };
@@ -567,7 +591,7 @@ function verifyDoctorAccess(token) {
     // Hardcoded to allow any token - just use demo data
     currentDoctorPatient = {
         patientId: "demo-patient-001",
-        patientName: "Sarah Johnson",
+        patientName: "Arnav",
         created: new Date().toISOString(),
         timeline: [
             {
@@ -592,6 +616,22 @@ function verifyDoctorAccess(token) {
                 title: "Medical Document Uploaded",
                 date: "2024-09-05",
                 description: "Patient intake form and medical history",
+                apiSource: "upload-api"
+            },
+            {
+                id: "event-004",
+                eventType: "lab_test",
+                title: "Lab Results - Metabolic Panel",
+                date: "2024-08-20",
+                description: "Glucose 110 mg/dL, Creatinine 0.9 mg/dL - Slightly elevated glucose",
+                apiSource: "timeline-api"
+            },
+            {
+                id: "event-005",
+                eventType: "prescription",
+                title: "Medication Prescribed",
+                date: "2024-08-15",
+                description: "Atorvastatin 20mg once daily",
                 apiSource: "upload-api"
             }
         ]
